@@ -20,6 +20,8 @@ class SuccessState extends AdminState {
   List<PickUp> pickup;
   List<Seat> seat;
   List<Discount> discount;
+  List<TicketOrder> ticketorder;
+  List<RentalOrder> rental;
   SuccessState(
       {this.useraccount,
       this.ticket,
@@ -27,7 +29,8 @@ class SuccessState extends AdminState {
       this.car,
       this.pickup,
       this.seat,
-      this.discount});
+      this.discount,
+      this.ticketorder, this.rental});
 }
 
 class FailureState extends AdminState {

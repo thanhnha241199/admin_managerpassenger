@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:admin_managerpassenger/blocs/admin/model/user_account.dart';
 import 'package:admin_managerpassenger/blocs/admin/model/user_authenticate.dart';
 import 'package:admin_managerpassenger/blocs/car/model/car.dart';
+import 'package:admin_managerpassenger/blocs/order/model/rental_model.dart';
+import 'package:admin_managerpassenger/blocs/order/model/ticket_model.dart';
 import 'package:admin_managerpassenger/blocs/ticket/model/discount.dart';
 import 'package:admin_managerpassenger/blocs/ticket/model/pickup.dart';
 import 'package:admin_managerpassenger/blocs/ticket/model/schedule.dart';
@@ -102,6 +104,28 @@ class UserRepository {
       var data = response.data;
       data.map((ad) => discount.add(Discount.fromJson(ad))).toList();
       return discount;
+    }
+  }
+
+  Future<List<TicketOrder>> fetchOrderTicket() async {
+    List<TicketOrder> ticketorder = [];
+    Response response =
+        await Dio().get("https://managerpassenger.herokuapp.com/getorder");
+    if (response != null && response.statusCode == 200) {
+      var data = response.data;
+      data.map((ad) => ticketorder.add(TicketOrder.fromJson(ad))).toList();
+      return ticketorder;
+    }
+  }
+
+  Future<List<RentalOrder>> fetchOrderRental() async {
+    List<RentalOrder> rentalorder = [];
+    Response response =
+        await Dio().get("https://managerpassenger.herokuapp.com/getrental");
+    if (response != null && response.statusCode == 200) {
+      var data = response.data;
+      data.map((ad) => rentalorder.add(RentalOrder.fromJson(ad))).toList();
+      return rentalorder;
     }
   }
 

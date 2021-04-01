@@ -883,9 +883,64 @@ class _AdminScreenState extends State<AdminScreen> {
                                               },
                                             )
                                           : select == "order/ticket"
-                                              ? OrderTicket()
+                                              ? BlocBuilder<AdminBloc,
+                                                  AdminState>(
+                                                  builder: (context, state) {
+                                                    if (state is FailureState) {
+                                                      return Expanded(
+                                                        flex: 5,
+                                                        child: Text("Error"),
+                                                      );
+                                                    }
+                                                    if (state is LoadingState) {
+                                                      return Expanded(
+                                                        flex: 5,
+                                                        child: Center(
+                                                          child:
+                                                              CircularProgressIndicator(),
+                                                        ),
+                                                      );
+                                                    }
+                                                    if (state is SuccessState) {
+                                                      return OrderTicket(
+                                                          ticket: state
+                                                              .ticketorder);
+                                                    }
+                                                    return Container();
+                                                  },
+                                                )
                                               : select == "order/rental"
-                                                  ? OrderRental()
+                                                  ? BlocBuilder<AdminBloc,
+                                                      AdminState>(
+                                                      builder:
+                                                          (context, state) {
+                                                        if (state
+                                                            is FailureState) {
+                                                          return Expanded(
+                                                            flex: 5,
+                                                            child:
+                                                                Text("Error"),
+                                                          );
+                                                        }
+                                                        if (state
+                                                            is LoadingState) {
+                                                          return Expanded(
+                                                            flex: 5,
+                                                            child: Center(
+                                                              child:
+                                                                  CircularProgressIndicator(),
+                                                            ),
+                                                          );
+                                                        }
+                                                        if (state
+                                                            is SuccessState) {
+                                                          return OrderRental(
+                                                              rentalorder:
+                                                                  state.rental);
+                                                        }
+                                                        return Container();
+                                                      },
+                                                    )
                                                   : select == "time"
                                                       ? BlocBuilder<AdminBloc,
                                                           AdminState>(

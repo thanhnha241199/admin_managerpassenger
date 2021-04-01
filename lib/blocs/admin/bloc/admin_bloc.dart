@@ -1,5 +1,7 @@
 import 'package:admin_managerpassenger/blocs/admin/model/user_account.dart';
 import 'package:admin_managerpassenger/blocs/car/model/car.dart';
+import 'package:admin_managerpassenger/blocs/order/model/rental_model.dart';
+import 'package:admin_managerpassenger/blocs/order/model/ticket_model.dart';
 import 'package:admin_managerpassenger/blocs/ticket/model/pickup.dart';
 import 'package:admin_managerpassenger/blocs/ticket/model/discount.dart';
 import 'package:admin_managerpassenger/blocs/ticket/model/schedule.dart';
@@ -32,6 +34,8 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
         var pickup = await userRepository.fetchPickup();
         var seat = await userRepository.fetchSeat();
         var discount = await userRepository.fetchDiscount();
+        var ticketorder = await userRepository.fetchOrderTicket();
+        var rental = await userRepository.fetchOrderRental();
         yield SuccessState(
             useraccount: useraccount,
             ticket: ticket,
@@ -39,7 +43,9 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
             car: car,
             pickup: pickup,
             discount: discount,
-            seat: seat);
+            seat: seat,
+            ticketorder: ticketorder,
+            rental: rental);
       } catch (e) {
         yield FailureState(msg: e.toString());
       }
