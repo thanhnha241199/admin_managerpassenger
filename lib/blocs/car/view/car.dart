@@ -150,12 +150,14 @@ class _CarScreenState extends State<CarScreen> {
                                 DataCell(Text(widget.car[index].supportid)),
                                 DataCell(Text(widget.car[index].status)),
                                 DataCell(Text(
-                                  widget.car[index].createdAt.toString(),
-                                  overflow: TextOverflow.ellipsis,
+                                  widget.car[index].createdAt
+                                      .toString()
+                                      .substring(0, 10),
                                 )),
                                 DataCell(Text(
-                                  widget.car[index].updatedAt.toString(),
-                                  overflow: TextOverflow.ellipsis,
+                                  widget.car[index].updatedAt
+                                      .toString()
+                                      .substring(0, 10),
                                 )),
                                 DataCell(IconButton(
                                   onPressed: () {

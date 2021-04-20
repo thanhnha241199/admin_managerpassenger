@@ -26,7 +26,7 @@ class _DiscountScreenState extends State<DiscountScreen> {
           child: Stack(
             children: [
               Container(
-                height: MediaQuery.of(context).size.height / 18,
+                height: MediaQuery.of(context).size.height / 19,
                 width: MediaQuery.of(context).size.width,
                 color: Colors.white,
                 child: Row(

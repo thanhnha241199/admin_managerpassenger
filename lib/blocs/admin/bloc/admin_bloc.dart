@@ -28,14 +28,23 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
       try {
         yield LoadingState();
         var useraccount = await userRepository.fetchUserAccount();
+        print("Account ${useraccount}");
         var car = await userRepository.fetchCar();
+        print("car ${car}");
         var ticket = await userRepository.fetchTicketPopular();
+        print("ticket ${ticket}");
         var schedule = await userRepository.fetchSchedule();
+        print("schedule ${schedule}");
         var pickup = await userRepository.fetchPickup();
+        print("pickup ${pickup}");
         var seat = await userRepository.fetchSeat();
+        print("seat ${seat}");
         var discount = await userRepository.fetchDiscount();
+        print("discount ${discount}");
         var ticketorder = await userRepository.fetchOrderTicket();
+        print("ticketorder ${ticketorder}");
         var rental = await userRepository.fetchOrderRental();
+        print("rental ${rental}");
         yield SuccessState(
             useraccount: useraccount,
             ticket: ticket,
@@ -47,6 +56,7 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
             ticketorder: ticketorder,
             rental: rental);
       } catch (e) {
+        print(e.toString());
         yield FailureState(msg: e.toString());
       }
     }

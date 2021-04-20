@@ -11,6 +11,7 @@ import 'package:admin_managerpassenger/blocs/ticket/model/schedule.dart';
 import 'package:admin_managerpassenger/blocs/ticket/model/seat.dart';
 import 'package:admin_managerpassenger/blocs/ticket/model/ticket.dart';
 import 'package:admin_managerpassenger/providers/api.dart';
+import 'package:admin_managerpassenger/utils/config.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,8 +33,7 @@ class UserRepository {
 
   Future<List<UserAccount>> fetchUserAccount() async {
     List<UserAccount> useraccount = [];
-    Response response =
-        await Dio().get("https://managerpassenger.herokuapp.com/getuser");
+    Response response = await Dio().get("${AddressServer.address}getuser");
     if (response != null && response.statusCode == 200) {
       var data = response.data;
       data.map((ad) => useraccount.add(UserAccount.fromJson(ad))).toList();
@@ -43,8 +43,7 @@ class UserRepository {
 
   Future<List<Car>> fetchCar() async {
     List<Car> car = [];
-    Response response =
-        await Dio().get("https://managerpassenger.herokuapp.com/getcar");
+    Response response = await Dio().get("${AddressServer.address}getcar");
     if (response != null && response.statusCode == 200) {
       var data = response.data;
       data.map((ad) => car.add(Car.fromJson(ad))).toList();
@@ -54,8 +53,7 @@ class UserRepository {
 
   Future<List<Ticket>> fetchTicketPopular() async {
     List<Ticket> ticket = [];
-    Response response =
-        await Dio().get("https://managerpassenger.herokuapp.com/gettourbus");
+    Response response = await Dio().get("${AddressServer.address}gettourbus");
     if (response != null && response.statusCode == 200) {
       var data = response.data;
       data.map((ad) => ticket.add(Ticket.fromJson(ad))).toList();
@@ -65,8 +63,7 @@ class UserRepository {
 
   Future<List<Schedule>> fetchSchedule() async {
     List<Schedule> schedule = [];
-    Response response =
-        await Dio().get("https://managerpassenger.herokuapp.com/getschedule");
+    Response response = await Dio().get("${AddressServer.address}getschedule");
     if (response != null && response.statusCode == 200) {
       var data = response.data;
       data.map((ad) => schedule.add(Schedule.fromJson(ad))).toList();
@@ -76,8 +73,7 @@ class UserRepository {
 
   Future<List<PickUp>> fetchPickup() async {
     List<PickUp> pickup = [];
-    Response response =
-        await Dio().get("https://managerpassenger.herokuapp.com/getpickup");
+    Response response = await Dio().get("${AddressServer.address}getpickup");
     if (response != null && response.statusCode == 200) {
       var data = response.data;
       data.map((ad) => pickup.add(PickUp.fromJson(ad))).toList();
@@ -87,8 +83,7 @@ class UserRepository {
 
   Future<List<Seat>> fetchSeat() async {
     List<Seat> seat = [];
-    Response response =
-        await Dio().get("https://managerpassenger.herokuapp.com/getseat");
+    Response response = await Dio().get("${AddressServer.address}getseat");
     if (response != null && response.statusCode == 200) {
       var data = response.data;
       data.map((ad) => seat.add(Seat.fromJson(ad))).toList();
@@ -98,8 +93,7 @@ class UserRepository {
 
   Future<List<Discount>> fetchDiscount() async {
     List<Discount> discount = [];
-    Response response =
-        await Dio().get("https://managerpassenger.herokuapp.com/getdiscount");
+    Response response = await Dio().get("${AddressServer.address}getdiscount");
     if (response != null && response.statusCode == 200) {
       var data = response.data;
       data.map((ad) => discount.add(Discount.fromJson(ad))).toList();
@@ -109,8 +103,7 @@ class UserRepository {
 
   Future<List<TicketOrder>> fetchOrderTicket() async {
     List<TicketOrder> ticketorder = [];
-    Response response =
-        await Dio().get("https://managerpassenger.herokuapp.com/getorder");
+    Response response = await Dio().get("${AddressServer.address}getorder");
     if (response != null && response.statusCode == 200) {
       var data = response.data;
       data.map((ad) => ticketorder.add(TicketOrder.fromJson(ad))).toList();
@@ -120,10 +113,11 @@ class UserRepository {
 
   Future<List<RentalOrder>> fetchOrderRental() async {
     List<RentalOrder> rentalorder = [];
-    Response response =
-        await Dio().get("https://managerpassenger.herokuapp.com/getrental");
+    Response response = await Dio().get("${AddressServer.address}getrental");
+    print("${AddressServer.address}getrental");
     if (response != null && response.statusCode == 200) {
       var data = response.data;
+      print(data);
       data.map((ad) => rentalorder.add(RentalOrder.fromJson(ad))).toList();
       return rentalorder;
     }
@@ -138,8 +132,8 @@ class UserRepository {
       "phone": phone,
       "type": type
     };
-    Response response = await Dio()
-        .post("https://managerpassenger.herokuapp.com/adduser", data: map);
+    Response response =
+        await Dio().post("${AddressServer.address}adduser", data: map);
     if (response != null && response.statusCode == 200) {
       print("res ${response.data['success']}");
       return response.data['success'].toString();
@@ -148,8 +142,8 @@ class UserRepository {
 
   Future<String> deleteUser(String id) async {
     Map map = {"id": id};
-    Response response = await Dio()
-        .post("https://managerpassenger.herokuapp.com/deleteuser", data: map);
+    Response response =
+        await Dio().post("${AddressServer.address}deleteuser", data: map);
     if (response != null && response.statusCode == 200) {
       print("res ${response.data['success']}");
       return response.data['success'].toString();
@@ -158,8 +152,8 @@ class UserRepository {
 
   Future<String> deleteTicket(String id) async {
     Map map = {"id": id};
-    Response response = await Dio()
-        .post("https://managerpassenger.herokuapp.com/deleteticket", data: map);
+    Response response =
+        await Dio().post("${AddressServer.address}deleteticket", data: map);
     if (response != null && response.statusCode == 200) {
       print("res ${response.data['success']}");
       return response.data['success'].toString();
@@ -176,8 +170,8 @@ class UserRepository {
       "type": type
     };
     print(map);
-    Response response = await Dio()
-        .post("https://managerpassenger.herokuapp.com/updateuser", data: map);
+    Response response =
+        await Dio().post("${AddressServer.address}updateuser", data: map);
     if (response != null && response.statusCode == 200) {
       print("res ${response.data['success']}");
       return response.data['success'].toString();
@@ -193,8 +187,8 @@ class UserRepository {
       "range": range,
       "price": price
     };
-    Response response = await Dio()
-        .post("https://managerpassenger.herokuapp.com/addtourbus", data: map);
+    Response response =
+        await Dio().post("${AddressServer.address}addtourbus", data: map);
     if (response != null && response.statusCode == 200) {
       print("res ${response.data['success']}");
       return response.data['success'].toString();
@@ -211,8 +205,8 @@ class UserRepository {
       "range": range,
       "price": price
     };
-    Response response = await Dio()
-        .post("https://managerpassenger.herokuapp.com/updateticket", data: map);
+    Response response =
+        await Dio().post("${AddressServer.address}updateticket", data: map);
     if (response != null && response.statusCode == 200) {
       print("res ${response.data['success']}");
       return response.data['success'].toString();
@@ -228,8 +222,8 @@ class UserRepository {
       "schedule": schedule
     };
     print(map);
-    Response response = await Dio()
-        .post("https://managerpassenger.herokuapp.com/addschedule", data: map);
+    Response response =
+        await Dio().post("${AddressServer.address}addschedule", data: map);
     if (response != null && response.statusCode == 200) {
       print("res ${response.data['success']}");
       return response.data['success'].toString();
@@ -245,9 +239,8 @@ class UserRepository {
       "locationend": locationend,
       "schedule": schedule
     };
-    Response response = await Dio().post(
-        "https://managerpassenger.herokuapp.com/updateschedule",
-        data: map);
+    Response response =
+        await Dio().post("${AddressServer.address}updateschedule", data: map);
     print("respon + ${response}");
     if (response != null && response.statusCode == 200) {
       print("res ${response.data['success']}");
@@ -257,9 +250,8 @@ class UserRepository {
 
   Future<String> deleteSchedule(String id) async {
     Map map = {"id": id};
-    Response response = await Dio().post(
-        "https://managerpassenger.herokuapp.com/deleteschedule",
-        data: map);
+    Response response =
+        await Dio().post("${AddressServer.address}deleteschedule", data: map);
     if (response != null && response.statusCode == 200) {
       print("res ${response.data['success']}");
       return response.data['success'].toString();
@@ -275,8 +267,8 @@ class UserRepository {
       "status": status
     };
     print(map);
-    Response response = await Dio()
-        .post("https://managerpassenger.herokuapp.com/addcar", data: map);
+    Response response =
+        await Dio().post("${AddressServer.address}addcar", data: map);
     if (response != null && response.statusCode == 200) {
       print("res ${response.data['success']}");
       return response.data['success'].toString();
@@ -292,8 +284,8 @@ class UserRepository {
       "tourid": tourid,
       "status": status
     };
-    Response response = await Dio()
-        .post("https://managerpassenger.herokuapp.com/updatecar", data: map);
+    Response response =
+        await Dio().post("${AddressServer.address}updatecar", data: map);
     print("respon + ${response}");
     if (response != null && response.statusCode == 200) {
       print("res ${response.data['success']}");
@@ -303,8 +295,8 @@ class UserRepository {
 
   Future<String> deleteCar(String id) async {
     Map map = {"id": id};
-    Response response = await Dio()
-        .post("https://managerpassenger.herokuapp.com/deletecar", data: map);
+    Response response =
+        await Dio().post("${AddressServer.address}deletecar", data: map);
     if (response != null && response.statusCode == 200) {
       print("res ${response.data['success']}");
       return response.data['success'].toString();
@@ -315,8 +307,8 @@ class UserRepository {
       List<String> time, String tourid, List<Address> address) async {
     Map map = {"tourid": tourid, "time": time, "address": address};
     print(map);
-    Response response = await Dio()
-        .post("https://managerpassenger.herokuapp.com/addpickup", data: map);
+    Response response =
+        await Dio().post("${AddressServer.address}addpickup", data: map);
     print("respon + ${response}");
     if (response != null && response.statusCode == 200) {
       print("res ${response.data['success']}");
@@ -328,8 +320,8 @@ class UserRepository {
       List<Address> address) async {
     Map map = {"id": id, "tourid": tourid, "time": time, "address": address};
     print(map);
-    Response response = await Dio()
-        .post("https://managerpassenger.herokuapp.com/updatepickup", data: map);
+    Response response =
+        await Dio().post("${AddressServer.address}updatepickup", data: map);
     print("respon + ${response}");
     if (response != null && response.statusCode == 200) {
       print("res ${response.data['success']}");
@@ -339,8 +331,8 @@ class UserRepository {
 
   Future<String> deletePickUp(String id) async {
     Map map = {"id": id};
-    Response response = await Dio()
-        .post("https://managerpassenger.herokuapp.com/deletepickup", data: map);
+    Response response =
+        await Dio().post("${AddressServer.address}deletepickup", data: map);
     if (response != null && response.statusCode == 200) {
       print("res ${response.data['success']}");
       return response.data['success'].toString();
@@ -356,8 +348,8 @@ class UserRepository {
       "floors2": floors2
     };
     print(map);
-    Response response = await Dio()
-        .post("https://managerpassenger.herokuapp.com/addseat", data: map);
+    Response response =
+        await Dio().post("${AddressServer.address}addseat", data: map);
     print("respon + ${response}");
     if (response != null && response.statusCode == 200) {
       print("res ${response.data['success']}");
@@ -375,8 +367,8 @@ class UserRepository {
       "floors2": floors2
     };
     print(map);
-    Response response = await Dio()
-        .post("https://managerpassenger.herokuapp.com/updateseat", data: map);
+    Response response =
+        await Dio().post("${AddressServer.address}updateseat", data: map);
     print("respon + ${response}");
     if (response != null && response.statusCode == 200) {
       print("res ${response.data['success']}");
@@ -386,8 +378,8 @@ class UserRepository {
 
   Future<String> deleteSeat(String id) async {
     Map map = {"id": id};
-    Response response = await Dio()
-        .post("https://managerpassenger.herokuapp.com/deleteseat", data: map);
+    Response response =
+        await Dio().post("${AddressServer.address}deleteseat", data: map);
     if (response != null && response.statusCode == 200) {
       print("res ${response.data['success']}");
       return response.data['success'].toString();
@@ -404,8 +396,8 @@ class UserRepository {
       "timeend": timeend.toString(),
       "description": description
     };
-    Response response = await Dio()
-        .post("https://managerpassenger.herokuapp.com/adddiscount", data: map);
+    Response response =
+        await Dio().post("${AddressServer.address}adddiscount", data: map);
     if (response != null && response.statusCode == 200) {
       print("res ${response.data['success']}");
       return response.data['success'].toString();
@@ -424,9 +416,8 @@ class UserRepository {
       "description": description
     };
     print(map);
-    Response response = await Dio().post(
-        "https://managerpassenger.herokuapp.com/updatediscount",
-        data: map);
+    Response response =
+        await Dio().post("${AddressServer.address}updatediscount", data: map);
     print("update + ${response}");
     if (response != null && response.statusCode == 200) {
       print("res ${response.data['success']}");
@@ -436,9 +427,8 @@ class UserRepository {
 
   Future<String> deleteDiscount(String id) async {
     Map map = {"id": id};
-    Response response = await Dio().post(
-        "https://managerpassenger.herokuapp.com/deletediscount",
-        data: map);
+    Response response =
+        await Dio().post("${AddressServer.address}deletediscount", data: map);
     if (response != null && response.statusCode == 200) {
       print("res ${response.data['success']}");
       return response.data['success'].toString();

@@ -2,10 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:admin_managerpassenger/blocs/admin/model/user_authenticate.dart';
+import 'package:admin_managerpassenger/utils/config.dart';
 import 'package:http/http.dart' as http;
 
-final _base = "https://managerpassenger.herokuapp.com";
-final _tokenEndpoint = "/authenticate";
+final _base = AddressServer.address;
+final _tokenEndpoint = "authenticate";
 final _tokenURL = _base + _tokenEndpoint;
 
 Future<Token> getToken(UserLogin userLogin) async {
@@ -24,7 +25,3 @@ Future<Token> getToken(UserLogin userLogin) async {
     throw Exception(json.decode(response.body));
   }
 }
-
-
-
-
