@@ -5,6 +5,7 @@ import 'package:admin_managerpassenger/blocs/order/model/ticket_model.dart';
 import 'package:admin_managerpassenger/blocs/ticket/model/ticket.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class OrderTicket extends StatefulWidget {
   List<TicketOrder> ticket;
@@ -18,6 +19,9 @@ class OrderTicket extends StatefulWidget {
 class _OrderTicketState extends State<OrderTicket> {
   TextEditingController searchController = TextEditingController();
   bool _fromTop = true;
+  final format = new DateFormat('yyyy-MM-dd hh:mm');
+  final format_number = new NumberFormat("#,###", "en_US");
+  bool checksort = false;
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -74,35 +78,152 @@ class _OrderTicketState extends State<OrderTicket> {
                         label: Text('Index'),
                       ),
                       DataColumn(
-                        label: Text('ID'),
+                        label: GestureDetector(
+                          onTap: () {
+                            if (checksort) {
+                              setState(() {
+                                widget.ticket
+                                    .sort((a, b) => a.id.compareTo(b.id));
+                                checksort = !checksort;
+                              });
+                            } else {
+                              setState(() {
+                                widget.ticket
+                                    .sort((b, a) => a.id.compareTo(b.id));
+                                checksort = !checksort;
+                              });
+                            }
+                          },
+                          child: Row(
+                            children: [Text("ID"), Icon(Icons.import_export)],
+                          ),
+                        ),
                       ),
-                      // DataColumn(
-                      //   label: Text('Location Start'),
-                      // ),
-                      // DataColumn(
-                      //   label: Text('Location End'),
-                      // ),
-                      // DataColumn(
-                      //   label: Text('Time'),
-                      // ),
-                      // DataColumn(
-                      //   label: Text('Range'),
-                      // ),
-                      // DataColumn(
-                      //   label: Text('Price'),
-                      // ),
-                      // DataColumn(
-                      //   label: Text('CreatedAt'),
-                      // ),
-                      // DataColumn(
-                      //   label: Text('UpdatedAt'),
-                      // ),
-                      // DataColumn(
-                      //   label: Text('Edit'),
-                      // ),
-                      // DataColumn(
-                      //   label: Text('Delete'),
-                      // ),
+                      DataColumn(
+                        label: GestureDetector(
+                          onTap: () {
+                            if (checksort) {
+                              setState(() {
+                                widget.ticket.sort((a, b) =>
+                                    a.paymentType.compareTo(b.paymentType));
+                                checksort = !checksort;
+                              });
+                            } else {
+                              setState(() {
+                                widget.ticket.sort((b, a) =>
+                                    a.paymentType.compareTo(b.paymentType));
+                                checksort = !checksort;
+                              });
+                            }
+                          },
+                          child: Row(
+                            children: [
+                              Text("Payment Method"),
+                              Icon(Icons.import_export)
+                            ],
+                          ),
+                        ),
+                      ),
+                      DataColumn(
+                        label: GestureDetector(
+                          onTap: () {
+                            if (checksort) {
+                              setState(() {
+                                widget.ticket.sort(
+                                    (a, b) => a.status.compareTo(b.status));
+                                checksort = !checksort;
+                              });
+                            } else {
+                              setState(() {
+                                widget.ticket.sort(
+                                    (b, a) => a.status.compareTo(b.status));
+                                checksort = !checksort;
+                              });
+                            }
+                          },
+                          child: Row(
+                            children: [
+                              Text("Status"),
+                              Icon(Icons.import_export)
+                            ],
+                          ),
+                        ),
+                      ),
+                      DataColumn(
+                        label: GestureDetector(
+                          onTap: () {
+                            if (checksort) {
+                              setState(() {
+                                widget.ticket
+                                    .sort((a, b) => a.seat.compareTo(b.seat));
+                                checksort = !checksort;
+                              });
+                            } else {
+                              setState(() {
+                                widget.ticket
+                                    .sort((b, a) => a.seat.compareTo(b.seat));
+                                checksort = !checksort;
+                              });
+                            }
+                          },
+                          child: Row(
+                            children: [Text("Seat"), Icon(Icons.import_export)],
+                          ),
+                        ),
+                      ),
+                      DataColumn(
+                        label: GestureDetector(
+                          onTap: () {
+                            if (checksort) {
+                              setState(() {
+                                widget.ticket.sort((a, b) =>
+                                    a.totalprice.compareTo(b.totalprice));
+                                checksort = !checksort;
+                              });
+                            } else {
+                              setState(() {
+                                widget.ticket.sort((b, a) =>
+                                    a.totalprice.compareTo(b.totalprice));
+                                checksort = !checksort;
+                              });
+                            }
+                          },
+                          child: Row(
+                            children: [
+                              Text("Price"),
+                              Icon(Icons.import_export)
+                            ],
+                          ),
+                        ),
+                      ),
+                      DataColumn(
+                        label: GestureDetector(
+                          onTap: () {
+                            if (checksort) {
+                              setState(() {
+                                widget.ticket.sort(
+                                    (a, b) => a.timetour.compareTo(b.timetour));
+                                checksort = !checksort;
+                              });
+                            } else {
+                              setState(() {
+                                widget.ticket.sort(
+                                    (b, a) => a.timetour.compareTo(b.timetour));
+                                checksort = !checksort;
+                              });
+                            }
+                          },
+                          child: Row(
+                            children: [Text("Time"), Icon(Icons.import_export)],
+                          ),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text('CreatedAt'),
+                      ),
+                      DataColumn(
+                        label: Text('UpdatedAt'),
+                      ),
                     ],
                     rows: List<DataRow>.generate(
                         widget.ticket.length,
@@ -121,90 +242,16 @@ class _OrderTicketState extends State<OrderTicket> {
                               cells: <DataCell>[
                                 DataCell(Text((index + 1).toString())),
                                 DataCell(Text(widget.ticket[index].id)),
-                                // DataCell(
-                                //     Text(widget.ticket[index].locationstart)),
-                                // DataCell(
-                                //     Text(widget.ticket[index].locationend)),
-                                // DataCell(Text(widget.ticket[index].time)),
-                                // DataCell(Text(widget.ticket[index].range)),
-                                // DataCell(Text(widget.ticket[index].price)),
-                                // DataCell(Text(
-                                //     widget.ticket[index].createdAt.toString())),
-                                // DataCell(Text(
-                                //     widget.ticket[index].updatedAt.toString())),
-                                // DataCell(IconButton(
-                                //   onPressed: () {
-                                //     showDialog(
-                                //         context: context,
-                                //         builder: (BuildContext context) {
-                                //           return FormEditTicket(
-                                //               widget.ticket[index]);
-                                //         });
-                                //   },
-                                //   icon: Icon(Icons.edit),
-                                // )),
-                                // DataCell(IconButton(
-                                //   onPressed: () {
-                                //     showGeneralDialog(
-                                //       barrierLabel: "Alert",
-                                //       barrierDismissible: true,
-                                //       barrierColor:
-                                //           Colors.black.withOpacity(0.5),
-                                //       transitionDuration:
-                                //           Duration(milliseconds: 300),
-                                //       context: context,
-                                //       pageBuilder: (context, anim1, anim2) {
-                                //         return AlertDialog(
-                                //           shape: RoundedRectangleBorder(
-                                //               borderRadius:
-                                //                   BorderRadius.circular(25)),
-                                //           title: Text('AlertDialog Title'),
-                                //           content: SingleChildScrollView(
-                                //             child: ListBody(
-                                //               children: <Widget>[
-                                //                 Text(
-                                //                     'This is a demo alert dialog.'),
-                                //                 Text(
-                                //                     'Would you like to approve of this message?'),
-                                //               ],
-                                //             ),
-                                //           ),
-                                //           actions: <Widget>[
-                                //             TextButton(
-                                //               child: Text('Yes'),
-                                //               onPressed: () {
-                                //                 BlocProvider.of<AdminBloc>(
-                                //                         context)
-                                //                     .add(DeleteTicketEvent(
-                                //                         id: widget
-                                //                             .ticket[index].id));
-                                //                 Navigator.pop(context);
-                                //               },
-                                //             ),
-                                //             TextButton(
-                                //               child: Text('No'),
-                                //               onPressed: () {
-                                //                 Navigator.of(context).pop();
-                                //               },
-                                //             ),
-                                //           ],
-                                //         );
-                                //       },
-                                //       transitionBuilder:
-                                //           (context, anim1, anim2, child) {
-                                //         return SlideTransition(
-                                //           position: Tween(
-                                //                   begin: Offset(
-                                //                       0, _fromTop ? -1 : 1),
-                                //                   end: Offset(0, 0))
-                                //               .animate(anim1),
-                                //           child: child,
-                                //         );
-                                //       },
-                                //     );
-                                //   },
-                                //   icon: Icon(Icons.delete),
-                                // )),
+                                DataCell(
+                                    Text(widget.ticket[index].paymentType)),
+                                DataCell(Text(widget.ticket[index].status)),
+                                DataCell(Text(widget.ticket[index].seat)),
+                                DataCell(Text(widget.ticket[index].totalprice)),
+                                DataCell(Text(widget.ticket[index].timetour)),
+                                DataCell(Text(format
+                                    .format(widget.ticket[index].createdAt))),
+                                DataCell(Text(format
+                                    .format(widget.ticket[index].updatedAt))),
                               ],
                             ))),
               ),

@@ -1,14 +1,18 @@
 import 'package:admin_managerpassenger/blocs/admin/bloc/admin_bloc.dart';
+import 'package:admin_managerpassenger/blocs/admin/model/user_account.dart';
+import 'package:admin_managerpassenger/blocs/car/model/car.dart';
 import 'package:admin_managerpassenger/blocs/form/form_add_ticket.dart';
 import 'package:admin_managerpassenger/blocs/form/form_edit_ticket.dart';
 import 'package:admin_managerpassenger/blocs/ticket/model/ticket.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class TicketPopular extends StatefulWidget {
   List<Ticket> ticket;
-
-  TicketPopular({this.ticket});
+  List<UserAccount> listUser;
+  List<Car> listCar;
+  TicketPopular({this.ticket, this.listUser, this.listCar});
 
   @override
   _TicketPopularState createState() => _TicketPopularState();
@@ -17,6 +21,9 @@ class TicketPopular extends StatefulWidget {
 class _TicketPopularState extends State<TicketPopular> {
   TextEditingController searchController = TextEditingController();
   bool _fromTop = true;
+  final format = new DateFormat('yyyy-MM-dd hh:mm');
+  final format_number = new NumberFormat("#,###", "en_US");
+  bool sort = false;
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -107,28 +114,148 @@ class _TicketPopularState extends State<TicketPopular> {
                         label: Text('Index'),
                       ),
                       DataColumn(
-                        label: Text('ID'),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'Location Start',
-                          overflow: TextOverflow.ellipsis,
+                        label: GestureDetector(
+                          onTap: () {
+                            if (sort) {
+                              setState(() {
+                                widget.ticket
+                                    .sort((a, b) => a.id.compareTo(b.id));
+                                sort = !sort;
+                              });
+                            } else {
+                              setState(() {
+                                widget.ticket
+                                    .sort((b, a) => a.id.compareTo(b.id));
+                                sort = !sort;
+                              });
+                            }
+                          },
+                          child: Row(
+                            children: [Text('ID'), Icon(Icons.import_export)],
+                          ),
                         ),
                       ),
                       DataColumn(
-                        label: Text(
-                          'Location End',
-                          overflow: TextOverflow.ellipsis,
+                        label: GestureDetector(
+                          onTap: () {
+                            if (sort) {
+                              setState(() {
+                                widget.ticket.sort((a, b) =>
+                                    a.locationstart.compareTo(b.locationstart));
+                                sort = !sort;
+                              });
+                            } else {
+                              setState(() {
+                                widget.ticket.sort((b, a) =>
+                                    a.locationstart.compareTo(b.locationstart));
+                                sort = !sort;
+                              });
+                            }
+                          },
+                          child: Row(
+                            children: [
+                              Text('Location Start'),
+                              Icon(Icons.import_export)
+                            ],
+                          ),
                         ),
                       ),
                       DataColumn(
-                        label: Text('Time'),
+                        label: GestureDetector(
+                          onTap: () {
+                            if (sort) {
+                              setState(() {
+                                widget.ticket.sort((a, b) =>
+                                    a.locationend.compareTo(b.locationend));
+                                sort = !sort;
+                              });
+                            } else {
+                              setState(() {
+                                widget.ticket.sort((b, a) =>
+                                    a.locationend.compareTo(b.locationend));
+                                sort = !sort;
+                              });
+                            }
+                          },
+                          child: Row(
+                            children: [
+                              Text('Location End'),
+                              Icon(Icons.import_export)
+                            ],
+                          ),
+                        ),
                       ),
                       DataColumn(
-                        label: Text('Range'),
+                        label: GestureDetector(
+                          onTap: () {
+                            if (sort) {
+                              setState(() {
+                                widget.ticket
+                                    .sort((a, b) => a.time.compareTo(b.time));
+                                sort = !sort;
+                              });
+                            } else {
+                              setState(() {
+                                widget.ticket
+                                    .sort((b, a) => a.time.compareTo(b.time));
+                                sort = !sort;
+                              });
+                            }
+                          },
+                          child: Row(
+                            children: [Text('Time'), Icon(Icons.import_export)],
+                          ),
+                        ),
                       ),
                       DataColumn(
-                        label: Text('Price'),
+                        label: GestureDetector(
+                          onTap: () {
+                            if (sort) {
+                              setState(() {
+                                widget.ticket
+                                    .sort((a, b) => a.range.compareTo(b.range));
+                                sort = !sort;
+                              });
+                            } else {
+                              setState(() {
+                                widget.ticket
+                                    .sort((b, a) => a.range.compareTo(b.range));
+                                sort = !sort;
+                              });
+                            }
+                          },
+                          child: Row(
+                            children: [
+                              Text('Range'),
+                              Icon(Icons.import_export)
+                            ],
+                          ),
+                        ),
+                      ),
+                      DataColumn(
+                        label: GestureDetector(
+                          onTap: () {
+                            if (sort) {
+                              setState(() {
+                                widget.ticket
+                                    .sort((a, b) => a.price.compareTo(b.price));
+                                sort = !sort;
+                              });
+                            } else {
+                              setState(() {
+                                widget.ticket
+                                    .sort((b, a) => a.price.compareTo(b.price));
+                                sort = !sort;
+                              });
+                            }
+                          },
+                          child: Row(
+                            children: [
+                              Text('Price'),
+                              Icon(Icons.import_export)
+                            ],
+                          ),
+                        ),
                       ),
                       DataColumn(
                         label: Text('CreatedAt'),
@@ -170,20 +297,21 @@ class _TicketPopularState extends State<TicketPopular> {
                                 )),
                                 DataCell(Text(widget.ticket[index].time)),
                                 DataCell(Text(widget.ticket[index].range)),
-                                DataCell(Text(widget.ticket[index].price)),
-                                DataCell(Text(widget.ticket[index].createdAt
-                                    .toString()
-                                    .substring(0, 10))),
-                                DataCell(Text(widget.ticket[index].updatedAt
-                                    .toString()
-                                    .substring(0, 10))),
+                                DataCell(Text(format_number.format(
+                                    int.parse(widget.ticket[index].price)))),
+                                DataCell(Text(format
+                                    .format(widget.ticket[index].createdAt))),
+                                DataCell(Text(format
+                                    .format(widget.ticket[index].updatedAt))),
                                 DataCell(IconButton(
                                   onPressed: () {
                                     showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
                                           return FormEditTicket(
-                                              widget.ticket[index]);
+                                              widget.ticket[index],
+                                              widget.listUser,
+                                              widget.listCar);
                                         });
                                   },
                                   icon: Icon(Icons.edit),

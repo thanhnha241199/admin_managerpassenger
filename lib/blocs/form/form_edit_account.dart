@@ -22,11 +22,12 @@ class _FormEditAccountState extends State<FormEditAccount> {
   TextEditingController createdController = TextEditingController();
   TextEditingController updatedController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-
+  bool activeCheck;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    activeCheck = widget.userAccount.active == "true" ? true : false;
     idController.text = widget.userAccount.id ?? null;
     emailController.text = widget.userAccount.email ?? null;
     nameController.text = widget.userAccount.name ?? null;
@@ -98,6 +99,20 @@ class _FormEditAccountState extends State<FormEditAccount> {
                                 ),
                               ),
                             ],
+                          ),
+                          ListTile(
+                            title: Text(
+                              'Active',
+                            ),
+                            leading: Switch(
+                              value: activeCheck,
+                              activeColor: Color(0xFF6200EE),
+                              onChanged: (bool value) {
+                                setState(() {
+                                  activeCheck = value;
+                                });
+                              },
+                            ),
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -313,7 +328,9 @@ class _FormEditAccountState extends State<FormEditAccount> {
                                                 email: emailController.text,
                                                 name: nameController.text,
                                                 phone: phoneController.text,
-                                                type: typeController.text));
+                                                type: typeController.text,
+                                                active:
+                                                    activeCheck.toString()));
                                       },
                                       child: Container(
                                         height:

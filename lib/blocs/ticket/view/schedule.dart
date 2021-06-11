@@ -2,13 +2,15 @@ import 'package:admin_managerpassenger/blocs/admin/bloc/admin_bloc.dart';
 import 'package:admin_managerpassenger/blocs/form/form_add_schedule.dart';
 import 'package:admin_managerpassenger/blocs/form/form_edit_schedule.dart';
 import 'package:admin_managerpassenger/blocs/ticket/model/schedule.dart';
+import 'package:admin_managerpassenger/blocs/ticket/model/ticket.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class ScheduleScreen extends StatefulWidget {
   List<Schedule> schedule;
-
-  ScheduleScreen({this.schedule});
+  List<Ticket> ticket;
+  ScheduleScreen({this.schedule, this.ticket});
 
   @override
   _ScheduleScreenState createState() => _ScheduleScreenState();
@@ -17,7 +19,7 @@ class ScheduleScreen extends StatefulWidget {
 class _ScheduleScreenState extends State<ScheduleScreen> {
   TextEditingController searchController = TextEditingController();
   bool _fromTop = true;
-
+  final format = new DateFormat('yyyy-MM-dd hh:mm');
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -94,7 +96,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return FormAddSchedule();
+                              return FormAddSchedule(
+                                ticket: widget.ticket,
+                              );
                             });
                       },
                     )
@@ -159,21 +163,17 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                                 DataCell(Text(
                                   widget.schedule[index].schedule[0].location
                                           .toString() +
-                                      widget
-                                          .schedule[index]
-                                          .schedule[widget.schedule[index]
-                                                  .schedule.length -
-                                              1]
-                                          .location
-                                          .toString(),
+                                      ".....",
                                   overflow: TextOverflow.ellipsis,
                                 )),
                                 DataCell(Text(
-                                  widget.schedule[index].createdAt.toString(),
+                                  format
+                                      .format(widget.schedule[index].createdAt),
                                   overflow: TextOverflow.ellipsis,
                                 )),
                                 DataCell(Text(
-                                  widget.schedule[index].updatedAt.toString(),
+                                  format
+                                      .format(widget.schedule[index].updatedAt),
                                   overflow: TextOverflow.ellipsis,
                                 )),
                                 DataCell(IconButton(
@@ -182,7 +182,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                                         context: context,
                                         builder: (BuildContext context) {
                                           return FormEditSchedule(
-                                              widget.schedule[index]);
+                                              widget.schedule[index],
+                                              widget.ticket);
                                         });
                                   },
                                   icon: Icon(Icons.edit),

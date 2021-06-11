@@ -9,13 +9,15 @@ import 'package:admin_managerpassenger/blocs/form/form_edit_pickup.dart';
 import 'package:admin_managerpassenger/blocs/form/form_edit_seat.dart';
 import 'package:admin_managerpassenger/blocs/ticket/model/pickup.dart';
 import 'package:admin_managerpassenger/blocs/ticket/model/seat.dart';
+import 'package:admin_managerpassenger/blocs/ticket/model/ticket.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PositionScreen extends StatefulWidget {
   List<Seat> seat;
-
-  PositionScreen({this.seat});
+  List<Car> car;
+  List<Ticket> ticket;
+  PositionScreen({this.seat, this.car, this.ticket});
   @override
   _PositionScreenState createState() => _PositionScreenState();
 }
@@ -23,6 +25,7 @@ class PositionScreen extends StatefulWidget {
 class _PositionScreenState extends State<PositionScreen> {
   TextEditingController searchController = TextEditingController();
   bool _fromTop = true;
+  Car car;
   Widget build(BuildContext context) {
     return Expanded(
         flex: 5,
@@ -98,7 +101,10 @@ class _PositionScreenState extends State<PositionScreen> {
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return FormAddSeat();
+                              return FormAddSeat(
+                                listCar: widget.car,
+                                ticket: widget.ticket,
+                              );
                             });
                       },
                     )
@@ -171,7 +177,10 @@ class _PositionScreenState extends State<PositionScreen> {
                                         context: context,
                                         builder: (BuildContext context) {
                                           return FormEditSeat(
-                                              widget.seat[index]);
+                                            widget.seat[index],
+                                            widget.car,
+                                            widget.ticket,
+                                          );
                                         });
                                   },
                                   icon: Icon(Icons.edit),

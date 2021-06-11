@@ -1,18 +1,25 @@
 import 'package:admin_managerpassenger/blocs/admin/bloc/admin_bloc.dart';
+import 'package:admin_managerpassenger/blocs/car/model/car.dart';
+import 'package:admin_managerpassenger/blocs/ticket/model/ticket.dart';
+import 'package:admin_managerpassenger/utils/app_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FormAddSeat extends StatefulWidget {
+  List<Car> listCar;
+  List<Ticket> ticket;
+  FormAddSeat({this.listCar, this.ticket});
   @override
   _FormAddSeatState createState() => _FormAddSeatState();
 }
 
 class _FormAddSeatState extends State<FormAddSeat> {
   TextEditingController idtourController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
   TextEditingController idcarController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   List<bool> checked = [true, true, false];
-
+  Car car;
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -66,6 +73,7 @@ class _FormAddSeatState extends State<FormAddSeat> {
                                       borderRadius:
                                           BorderRadius.circular(12.0)),
                                   child: TextField(
+                                    readOnly: true,
                                     controller: idtourController,
                                     decoration: InputDecoration(
                                         hintMaxLines: 10,
@@ -79,6 +87,37 @@ class _FormAddSeatState extends State<FormAddSeat> {
                                 ),
                               ],
                             ),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Name",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 20,
+                                ),
+                              ),
+                              Container(
+                                height: MediaQuery.of(context).size.height / 20,
+                                width: MediaQuery.of(context).size.width / 2.5,
+                                margin: EdgeInsets.symmetric(vertical: 10),
+                                decoration: BoxDecoration(
+                                    color: Colors.grey.withOpacity(0.3),
+                                    borderRadius: BorderRadius.circular(12.0)),
+                                child: TextField(
+                                  controller: nameController,
+                                  decoration: InputDecoration(
+                                      hintMaxLines: 10,
+                                      border: InputBorder.none,
+                                      hintText: "Name",
+                                      contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 24.0,
+                                        vertical: 20.0,
+                                      )),
+                                ),
+                              ),
+                            ],
                           ),
                           Padding(
                             padding: EdgeInsets.all(8.0),
@@ -97,21 +136,36 @@ class _FormAddSeatState extends State<FormAddSeat> {
                                       MediaQuery.of(context).size.height / 20,
                                   width:
                                       MediaQuery.of(context).size.width / 2.5,
-                                  margin: EdgeInsets.symmetric(vertical: 10),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 0.0),
                                   decoration: BoxDecoration(
                                       color: Colors.grey.withOpacity(0.3),
                                       borderRadius:
                                           BorderRadius.circular(12.0)),
-                                  child: TextField(
-                                    controller: idcarController,
+                                  margin: EdgeInsets.symmetric(vertical: 10),
+                                  alignment: Alignment.center,
+                                  child: DropdownButtonFormField<Car>(
+                                    hint: Text("Select item"),
+                                    value: car,
+                                    onChanged: (Car value) {
+                                      setState(() {
+                                        car = value;
+                                        idtourController.text = car.tourid;
+                                        nameController.text = car.name;
+                                      });
+                                    },
+                                    icon: Icon(Icons.keyboard_arrow_down),
                                     decoration: InputDecoration(
-                                        hintMaxLines: 10,
-                                        border: InputBorder.none,
-                                        hintText: "Car ID",
-                                        contentPadding: EdgeInsets.symmetric(
-                                          horizontal: 24.0,
-                                          vertical: 20.0,
-                                        )),
+                                        border: InputBorder.none),
+                                    items: widget.listCar.map((Car tinh) {
+                                      return DropdownMenuItem<Car>(
+                                        value: tinh,
+                                        child: Text(
+                                          "${tinh.id}",
+                                          style: AppTextStyles.textSize14(),
+                                        ),
+                                      );
+                                    }).toList(),
                                   ),
                                 ),
                               ],

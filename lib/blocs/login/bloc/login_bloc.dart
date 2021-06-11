@@ -37,10 +37,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           );
           SharedPreferences pref = await SharedPreferences.getInstance();
           String type = pref.getString("type");
-          if (type == "0") {
+          if (type == "2") {
             authenticationBloc.add(LoggedIn(user: user));
             yield LoginSuccess();
-          }else{
+          } else {
             yield LoginFailture(error: "error");
           }
         } catch (error) {

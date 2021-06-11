@@ -130,7 +130,8 @@ class UserRepository {
       "password": password,
       "name": name,
       "phone": phone,
-      "type": type
+      "type": type,
+      "active": "true"
     };
     Response response =
         await Dio().post("${AddressServer.address}adduser", data: map);
@@ -161,13 +162,14 @@ class UserRepository {
   }
 
   Future<String> updateUser(String id, String email, String password,
-      String name, String phone, String type) async {
+      String name, String phone, String type, String active) async {
     Map map = {
       "id": id,
       "email": email,
       "name": name,
       "phone": phone,
-      "type": type
+      "type": type,
+      "active": active
     };
     print(map);
     Response response =
@@ -178,14 +180,27 @@ class UserRepository {
     }
   }
 
-  Future<String> addTicket(String locationstart, String locationend,
-      String time, String range, String price) async {
+  Future<String> addTicket(
+      String locationstart,
+      String locationend,
+      String time,
+      String range,
+      String price,
+      String carid,
+      String driverid,
+      String shutle,
+      String supporttid) async {
     Map map = {
       "locationstart": locationstart,
       "locationend": locationend,
       "time": time,
       "range": range,
-      "price": price
+      "price": price,
+      "carid": carid,
+      "driverid": driverid,
+      "shuttle": shutle,
+      "supportid": supporttid,
+      "sale": "0"
     };
     Response response =
         await Dio().post("${AddressServer.address}addtourbus", data: map);
@@ -195,15 +210,29 @@ class UserRepository {
     }
   }
 
-  Future<String> updateTicket(String id, String locationstart,
-      String locationend, String time, String range, String price) async {
+  Future<String> updateTicket(
+      String id,
+      String locationstart,
+      String locationend,
+      String time,
+      String range,
+      String price,
+      String driverid,
+      String supportid,
+      String shuttle,
+      String carid) async {
     Map map = {
       "id": id,
       "locationstart": locationstart,
       "locationend": locationend,
       "time": time,
+      "driverid": driverid,
+      "supportid": supportid,
+      "shuttle": shuttle,
+      "carid": carid,
       "range": range,
-      "price": price
+      "price": price,
+      "sale": 0
     };
     Response response =
         await Dio().post("${AddressServer.address}updateticket", data: map);
@@ -259,12 +288,21 @@ class UserRepository {
   }
 
   Future<String> addCar(
-      String tourid, String driverid, String supportid, String status) async {
+      String tourid,
+      String name,
+      String numberplate,
+      String status,
+      String driverid,
+      String supportid,
+      String description) async {
     Map map = {
+      "name": name,
+      "numberplate": numberplate,
       "driverid": driverid,
       "supportid": supportid,
       "tourid": tourid,
-      "status": status
+      "status": status,
+      "description": description
     };
     print(map);
     Response response =
@@ -275,14 +313,24 @@ class UserRepository {
     }
   }
 
-  Future<String> updateCar(String id, String tourid, String driverid,
-      String supportid, String status) async {
+  Future<String> updateCar(
+      String id,
+      String tourid,
+      String name,
+      String numberplate,
+      String status,
+      String driverid,
+      String supportid,
+      String description) async {
     Map map = {
       "id": id,
+      "name": name,
+      "numberplate": numberplate,
       "driverid": driverid,
       "supportid": supportid,
       "tourid": tourid,
-      "status": status
+      "status": status,
+      "description": description
     };
     Response response =
         await Dio().post("${AddressServer.address}updatecar", data: map);

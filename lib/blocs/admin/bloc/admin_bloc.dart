@@ -43,18 +43,19 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
         print("discount ${discount}");
         var ticketorder = await userRepository.fetchOrderTicket();
         print("ticketorder ${ticketorder}");
-        var rental = await userRepository.fetchOrderRental();
-        print("rental ${rental}");
+        // var rental = await userRepository.fetchOrderRental();
+        //  print("rental ${rental}");
         yield SuccessState(
-            useraccount: useraccount,
-            ticket: ticket,
-            schedule: schedule,
-            car: car,
-            pickup: pickup,
-            discount: discount,
-            seat: seat,
-            ticketorder: ticketorder,
-            rental: rental);
+          useraccount: useraccount,
+          ticket: ticket,
+          schedule: schedule,
+          car: car,
+          pickup: pickup,
+          discount: discount,
+          seat: seat,
+          ticketorder: ticketorder,
+          // rental: rental
+        );
       } catch (e) {
         print(e.toString());
         yield FailureState(msg: e.toString());
@@ -123,7 +124,8 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
             adminEvent.password,
             adminEvent.name,
             adminEvent.phone,
-            adminEvent.type);
+            adminEvent.type,
+            adminEvent.active);
         if (msg == "true") {
           yield SuccessState();
           yield LoadingState();
@@ -152,7 +154,11 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
             adminEvent.locationend,
             adminEvent.time,
             adminEvent.range,
-            adminEvent.price);
+            adminEvent.price,
+            adminEvent.carid,
+            adminEvent.driverid,
+            adminEvent.shutle,
+            adminEvent.supporttid);
         if (msg == "true") {
           yield SuccessState();
           yield LoadingState();
@@ -177,12 +183,17 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
       try {
         yield AddLoadingState();
         var msg = await userRepository.updateTicket(
-            adminEvent.id,
-            adminEvent.locationstart,
-            adminEvent.locationend,
-            adminEvent.time,
-            adminEvent.range,
-            adminEvent.price);
+          adminEvent.id,
+          adminEvent.locationstart,
+          adminEvent.locationend,
+          adminEvent.time,
+          adminEvent.range,
+          adminEvent.price,
+          adminEvent.driverid,
+          adminEvent.supportid,
+          adminEvent.shuttle,
+          adminEvent.carid,
+        );
         if (msg == "true") {
           yield SuccessState();
           yield LoadingState();
@@ -311,8 +322,14 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
     if (adminEvent is AddCarEvent) {
       try {
         yield AddLoadingState();
-        var msg = await userRepository.addCar(adminEvent.idtour,
-            adminEvent.driverid, adminEvent.supportid, adminEvent.status);
+        var msg = await userRepository.addCar(
+            adminEvent.tourid,
+            adminEvent.name,
+            adminEvent.numberplate,
+            adminEvent.status,
+            adminEvent.driverid,
+            adminEvent.supportid,
+            adminEvent.description);
         if (msg == "true") {
           yield SuccessState();
           yield LoadingState();
@@ -338,10 +355,13 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
         yield AddLoadingState();
         var msg = await userRepository.updateCar(
             adminEvent.id,
-            adminEvent.idtour,
+            adminEvent.tourid,
+            adminEvent.name,
+            adminEvent.numberplate,
+            adminEvent.status,
             adminEvent.driverid,
             adminEvent.supportid,
-            adminEvent.status);
+            adminEvent.description);
         if (msg == "true") {
           yield SuccessState();
           yield LoadingState();

@@ -4,6 +4,7 @@ import 'package:admin_managerpassenger/blocs/form/form_add_user.dart';
 import 'package:admin_managerpassenger/blocs/form/form_edit_account.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class UserScreen extends StatefulWidget {
   List<UserAccount> account;
@@ -18,7 +19,8 @@ class _UserScreenState extends State<UserScreen> {
   TextEditingController searchController = TextEditingController();
   bool _fromTop = true;
   List<UserAccount> user;
-
+  final format = new DateFormat('yyyy-MM-dd hh:mm');
+  bool checkName = false, checkPhone = false, checkEmail = false;
   @override
   Widget build(BuildContext context) {
     user = widget.account.where((element) => element.type == "1").toList();
@@ -110,13 +112,76 @@ class _UserScreenState extends State<UserScreen> {
                         label: Text('Index'),
                       ),
                       DataColumn(
-                        label: Text('Email'),
+                        label: GestureDetector(
+                          onTap: () {
+                            if (checkEmail) {
+                              setState(() {
+                                widget.account
+                                    .sort((a, b) => a.email.compareTo(b.email));
+                                checkEmail = !checkEmail;
+                              });
+                            } else {
+                              setState(() {
+                                widget.account
+                                    .sort((b, a) => a.email.compareTo(b.email));
+                                checkEmail = !checkEmail;
+                              });
+                            }
+                          },
+                          child: Row(
+                            children: [
+                              Text('Email'),
+                              Icon(Icons.import_export)
+                            ],
+                          ),
+                        ),
                       ),
                       DataColumn(
-                        label: Text('Name'),
+                        label: GestureDetector(
+                          onTap: () {
+                            if (checkName) {
+                              setState(() {
+                                widget.account
+                                    .sort((a, b) => a.name.compareTo(b.name));
+                                checkName = !checkName;
+                              });
+                            } else {
+                              setState(() {
+                                widget.account
+                                    .sort((b, a) => a.name.compareTo(b.name));
+                                checkName = !checkName;
+                              });
+                            }
+                          },
+                          child: Row(
+                            children: [Text("Name"), Icon(Icons.import_export)],
+                          ),
+                        ),
                       ),
                       DataColumn(
-                        label: Text('Phone'),
+                        label: GestureDetector(
+                          onTap: () {
+                            if (checkPhone) {
+                              setState(() {
+                                widget.account
+                                    .sort((a, b) => a.phone.compareTo(b.phone));
+                                checkPhone = !checkPhone;
+                              });
+                            } else {
+                              setState(() {
+                                widget.account
+                                    .sort((b, a) => a.phone.compareTo(b.phone));
+                                checkPhone = !checkPhone;
+                              });
+                            }
+                          },
+                          child: Row(
+                            children: [
+                              Text("Phone"),
+                              Icon(Icons.import_export)
+                            ],
+                          ),
+                        ),
                       ),
                       DataColumn(
                         label: Text('CreatedAt'),
@@ -151,9 +216,9 @@ class _UserScreenState extends State<UserScreen> {
                                 DataCell(Text(user[index].name)),
                                 DataCell(Text(user[index].phone)),
                                 DataCell(
-                                    Text(user[index].createdAt.toString())),
+                                    Text(format.format(user[index].createdAt))),
                                 DataCell(
-                                    Text(user[index].updatedAt.toString())),
+                                    Text(format.format(user[index].updatedAt))),
                                 DataCell(IconButton(
                                   onPressed: () {
                                     showDialog(

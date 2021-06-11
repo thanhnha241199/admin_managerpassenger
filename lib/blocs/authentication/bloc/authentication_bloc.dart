@@ -28,7 +28,8 @@ class AuthenticationBloc
       yield AuthenticationUninitialized();
       final bool hasToken = prefs.getString("token") != null ? true : false;
       final String type = prefs.getString("type");
-      if (hasToken && type == "0") {
+      print(type);
+      if (hasToken && type == "2") {
         yield AuthenticationAuthenticated();
       } else {
         yield AuthenticationUnauthenticated();
@@ -46,6 +47,7 @@ class AuthenticationBloc
       yield AuthenticationLoading();
       var prefs = await SharedPreferences.getInstance();
       await prefs.remove("token");
+      await prefs.remove("type");
       yield AuthenticationUnauthenticated();
     }
   }

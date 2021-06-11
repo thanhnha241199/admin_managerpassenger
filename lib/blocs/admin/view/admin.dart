@@ -1,6 +1,7 @@
 import 'package:admin_managerpassenger/blocs/account/employee.dart';
 import 'package:admin_managerpassenger/blocs/account/user.dart';
 import 'package:admin_managerpassenger/blocs/admin/bloc/admin_bloc.dart';
+import 'package:admin_managerpassenger/blocs/admin/model/user_account.dart';
 import 'package:admin_managerpassenger/blocs/authentication/bloc/authentication_bloc.dart';
 import 'package:admin_managerpassenger/blocs/car/view/car.dart';
 import 'package:admin_managerpassenger/blocs/chart/chart_sample1.dart';
@@ -16,9 +17,11 @@ import 'package:admin_managerpassenger/blocs/ticket/view/schedule.dart';
 import 'package:admin_managerpassenger/blocs/ticket/view/ticket.dart';
 import 'package:admin_managerpassenger/blocs/ticket/view/time.dart';
 import 'package:admin_managerpassenger/repository/user_repository.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AdminScreen extends StatefulWidget {
@@ -217,13 +220,27 @@ class _AdminScreenState extends State<AdminScreen> {
                       leading: Icon(Icons.exit_to_app_outlined),
                       title: Text("Logout"),
                       onTap: () async {
-                        BlocProvider.of<AuthenticationBloc>(context)
-                            .add(LoggedOut());
-                        SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                        prefs.remove("token");
-                        prefs.remove("name");
-                        prefs.remove("type");
+                        AwesomeDialog(
+                          width: 400,
+                          context: context,
+                          dialogType: DialogType.QUESTION,
+                          headerAnimationLoop: false,
+                          animType: AnimType.BOTTOMSLIDE,
+                          title: 'Notification',
+                          desc: 'Yout want to log out ?',
+                          buttonsTextStyle: TextStyle(color: Colors.black),
+                          showCloseIcon: true,
+                          btnCancelOnPress: () {},
+                          btnOkOnPress: () async {
+                            BlocProvider.of<AuthenticationBloc>(context)
+                                .add(LoggedOut());
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            prefs.remove("token");
+                            prefs.remove("name");
+                            prefs.remove("type");
+                          },
+                        )..show();
                       },
                     ),
                   ],
@@ -247,6 +264,16 @@ class _AdminScreenState extends State<AdminScreen> {
                           );
                         }
                         if (state is SuccessState) {
+                          var sum = 0;
+                          final format_number =
+                              new NumberFormat("#,###", "en_US");
+                          state.ticketorder.forEach((e) {
+                            if (e.paymentType == "Card") {
+                              sum = sum +
+                                  int.parse(
+                                      e.totalprice.split(" ").toList()[0]);
+                            }
+                          });
                           return Expanded(
                               flex: 5,
                               child: Container(
@@ -637,6 +664,31 @@ class _AdminScreenState extends State<AdminScreen> {
                                         ),
                                       ],
                                     ),
+                                    Container(
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                              begin: Alignment.centerLeft,
+                                              end: Alignment.centerRight,
+                                              colors: [
+                                                Colors.purple,
+                                                Colors.blue
+                                              ]),
+                                          borderRadius:
+                                              BorderRadius.circular(25),
+                                          color: Colors.red),
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 10),
+                                      width: MediaQuery.of(context).size.width,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.2,
+                                      child: Text(
+                                        "Total: ${format_number.format(sum)} VND",
+                                        style: TextStyle(fontSize: 100),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
                                     Row(
                                       children: [
                                         Container(
@@ -656,89 +708,20 @@ class _AdminScreenState extends State<AdminScreen> {
                                         Column(
                                           children: [
                                             Container(
-                                              margin: EdgeInsets.symmetric(
-                                                  horizontal: 10),
                                               height: MediaQuery.of(context)
                                                       .size
                                                       .height /
-                                                  4,
+                                                  2,
                                               width: MediaQuery.of(context)
                                                       .size
                                                       .width /
                                                   2.5,
                                               child: LineChartSample1(),
                                             ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Container(
-                                              margin: EdgeInsets.symmetric(
-                                                  horizontal: 10),
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height /
-                                                  4,
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  2.5,
-                                              child: PieChartSample2(),
-                                            ),
                                           ],
                                         )
                                       ],
                                     ),
-                                    Container(
-                                      child: DataTable(
-                                        columns: const <DataColumn>[
-                                          DataColumn(
-                                            label: Text(
-                                              'Name',
-                                              style: TextStyle(
-                                                  fontStyle: FontStyle.italic),
-                                            ),
-                                          ),
-                                          DataColumn(
-                                            label: Text(
-                                              'Age',
-                                              style: TextStyle(
-                                                  fontStyle: FontStyle.italic),
-                                            ),
-                                          ),
-                                          DataColumn(
-                                            label: Text(
-                                              'Role',
-                                              style: TextStyle(
-                                                  fontStyle: FontStyle.italic),
-                                            ),
-                                          ),
-                                        ],
-                                        rows: const <DataRow>[
-                                          DataRow(
-                                            cells: <DataCell>[
-                                              DataCell(Text('Sarah')),
-                                              DataCell(Text('19')),
-                                              DataCell(Text('Student')),
-                                            ],
-                                          ),
-                                          DataRow(
-                                            cells: <DataCell>[
-                                              DataCell(Text('Janine')),
-                                              DataCell(Text('43')),
-                                              DataCell(Text('Professor')),
-                                            ],
-                                          ),
-                                          DataRow(
-                                            cells: <DataCell>[
-                                              DataCell(Text('William')),
-                                              DataCell(Text('27')),
-                                              DataCell(
-                                                  Text('Associate Professor')),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    )
                                   ],
                                 ),
                               ));
@@ -803,7 +786,12 @@ class _AdminScreenState extends State<AdminScreen> {
                                     }
                                     if (state is SuccessState) {
                                       return TicketPopular(
-                                          ticket: state.ticket);
+                                          listCar: state.car,
+                                          ticket: state.ticket,
+                                          listUser: state.useraccount
+                                              .where((element) =>
+                                                  element.type == "0")
+                                              .toList());
                                     }
                                     return Container();
                                   },
@@ -825,7 +813,9 @@ class _AdminScreenState extends State<AdminScreen> {
                                         }
                                         if (state is SuccessState) {
                                           return ScheduleScreen(
-                                              schedule: state.schedule);
+                                            schedule: state.schedule,
+                                            ticket: state.ticket,
+                                          );
                                         }
                                         return Expanded(
                                             flex: 5, child: Container());
@@ -877,7 +867,10 @@ class _AdminScreenState extends State<AdminScreen> {
                                                 }
                                                 if (state is SuccessState) {
                                                   return CarScreen(
-                                                      car: state.car);
+                                                    car: state.car,
+                                                    ticket: state.ticket,
+                                                    listuser: state.useraccount,
+                                                  );
                                                 }
                                                 return Container();
                                               },
@@ -903,44 +896,46 @@ class _AdminScreenState extends State<AdminScreen> {
                                                     }
                                                     if (state is SuccessState) {
                                                       return OrderTicket(
-                                                          ticket: state
-                                                              .ticketorder);
+                                                        ticket:
+                                                            state.ticketorder,
+                                                      );
                                                     }
                                                     return Container();
                                                   },
                                                 )
                                               : select == "order/rental"
-                                                  ? BlocBuilder<AdminBloc,
-                                                      AdminState>(
-                                                      builder:
-                                                          (context, state) {
-                                                        if (state
-                                                            is FailureState) {
-                                                          return Expanded(
-                                                            flex: 5,
-                                                            child:
-                                                                Text("Error"),
-                                                          );
-                                                        }
-                                                        if (state
-                                                            is LoadingState) {
-                                                          return Expanded(
-                                                            flex: 5,
-                                                            child: Center(
-                                                              child:
-                                                                  CircularProgressIndicator(),
-                                                            ),
-                                                          );
-                                                        }
-                                                        if (state
-                                                            is SuccessState) {
-                                                          return OrderRental(
-                                                              rentalorder:
-                                                                  state.rental);
-                                                        }
-                                                        return Container();
-                                                      },
-                                                    )
+                                                  ? Container()
+                                                  // ? BlocBuilder<AdminBloc,
+                                                  //     AdminState>(
+                                                  //     builder:
+                                                  //         (context, state) {
+                                                  //       if (state
+                                                  //           is FailureState) {
+                                                  //         return Expanded(
+                                                  //           flex: 5,
+                                                  //           child:
+                                                  //               Text("Error"),
+                                                  //         );
+                                                  //       }
+                                                  //       if (state
+                                                  //           is LoadingState) {
+                                                  //         return Expanded(
+                                                  //           flex: 5,
+                                                  //           child: Center(
+                                                  //             child:
+                                                  //                 CircularProgressIndicator(),
+                                                  //           ),
+                                                  //         );
+                                                  //       }
+                                                  //       if (state
+                                                  //           is SuccessState) {
+                                                  //         return OrderRental(
+                                                  //             rentalorder:
+                                                  //                 state.rental);
+                                                  //       }
+                                                  //       return Container();
+                                                  //     },
+                                                  //   )
                                                   : select == "time"
                                                       ? BlocBuilder<AdminBloc,
                                                           AdminState>(
@@ -967,8 +962,11 @@ class _AdminScreenState extends State<AdminScreen> {
                                                             if (state
                                                                 is SuccessState) {
                                                               return TimeScreen(
-                                                                  pickup: state
-                                                                      .pickup);
+                                                                pickup: state
+                                                                    .pickup,
+                                                                ticket: state
+                                                                    .ticket,
+                                                              );
                                                             }
                                                             return Expanded(
                                                                 flex: 5,
@@ -1004,8 +1002,13 @@ class _AdminScreenState extends State<AdminScreen> {
                                                                 if (state
                                                                     is SuccessState) {
                                                                   return PositionScreen(
-                                                                      seat: state
-                                                                          .seat);
+                                                                    seat: state
+                                                                        .seat,
+                                                                    car: state
+                                                                        .car,
+                                                                    ticket: state
+                                                                        .ticket,
+                                                                  );
                                                                 }
                                                                 return Expanded(
                                                                     flex: 5,

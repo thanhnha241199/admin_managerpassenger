@@ -1,3 +1,3 @@
 class AddressServer {
-  static const address = "http://192.168.2.31:3000/";
+  static const address = "http://172.20.10.8:3000/";
 }

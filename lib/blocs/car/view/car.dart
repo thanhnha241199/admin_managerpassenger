@@ -1,14 +1,17 @@
 import 'package:admin_managerpassenger/blocs/admin/bloc/admin_bloc.dart';
+import 'package:admin_managerpassenger/blocs/admin/model/user_account.dart';
 import 'package:admin_managerpassenger/blocs/car/model/car.dart';
 import 'package:admin_managerpassenger/blocs/form/form_add_car.dart';
 import 'package:admin_managerpassenger/blocs/form/form_edit_car.dart';
+import 'package:admin_managerpassenger/blocs/ticket/model/ticket.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CarScreen extends StatefulWidget {
   List<Car> car;
-
-  CarScreen({this.car});
+  List<Ticket> ticket;
+  List<UserAccount> listuser;
+  CarScreen({this.car, this.ticket, this.listuser});
   @override
   _CarScreenState createState() => _CarScreenState();
 }
@@ -16,6 +19,7 @@ class CarScreen extends StatefulWidget {
 class _CarScreenState extends State<CarScreen> {
   TextEditingController searchController = TextEditingController();
   bool _fromTop = true;
+  bool sort = false;
   Widget build(BuildContext context) {
     return Expanded(
         flex: 5,
@@ -91,7 +95,11 @@ class _CarScreenState extends State<CarScreen> {
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return FormAddCar();
+                              return FormAddCar(
+                                  listaccount: widget.listuser
+                                      .where((element) => element.type == "0")
+                                      .toList(),
+                                  ticket: widget.ticket);
                             });
                       },
                     )
@@ -105,16 +113,96 @@ class _CarScreenState extends State<CarScreen> {
                         label: Text('Index'),
                       ),
                       DataColumn(
-                        label: Text('ID'),
+                        label: GestureDetector(
+                          onTap: () {
+                            if (sort) {
+                              setState(() {
+                                widget.car.sort((a, b) => a.id.compareTo(b.id));
+                                sort = !sort;
+                              });
+                            } else {
+                              setState(() {
+                                widget.car.sort((b, a) => a.id.compareTo(b.id));
+                                sort = !sort;
+                              });
+                            }
+                          },
+                          child: Row(
+                            children: [Text('ID'), Icon(Icons.import_export)],
+                          ),
+                        ),
                       ),
                       DataColumn(
-                        label: Text('Driver ID'),
+                        label: GestureDetector(
+                          onTap: () {
+                            if (sort) {
+                              setState(() {
+                                widget.car
+                                    .sort((a, b) => a.name.compareTo(b.name));
+                                sort = !sort;
+                              });
+                            } else {
+                              setState(() {
+                                widget.car
+                                    .sort((b, a) => a.name.compareTo(b.name));
+                                sort = !sort;
+                              });
+                            }
+                          },
+                          child: Row(
+                            children: [Text('Name'), Icon(Icons.import_export)],
+                          ),
+                        ),
                       ),
                       DataColumn(
-                        label: Text('Support ID'),
+                        label: GestureDetector(
+                          onTap: () {
+                            if (sort) {
+                              setState(() {
+                                widget.car.sort((a, b) =>
+                                    a.numberplate.compareTo(b.numberplate));
+                                sort = !sort;
+                              });
+                            } else {
+                              setState(() {
+                                widget.car.sort((b, a) =>
+                                    a.numberplate.compareTo(b.numberplate));
+                                sort = !sort;
+                              });
+                            }
+                          },
+                          child: Row(
+                            children: [
+                              Text('Number Plate'),
+                              Icon(Icons.import_export)
+                            ],
+                          ),
+                        ),
                       ),
                       DataColumn(
-                        label: Text('Status'),
+                        label: GestureDetector(
+                          onTap: () {
+                            if (sort) {
+                              setState(() {
+                                widget.car.sort(
+                                    (a, b) => a.status.compareTo(b.status));
+                                sort = !sort;
+                              });
+                            } else {
+                              setState(() {
+                                widget.car.sort(
+                                    (b, a) => a.status.compareTo(b.status));
+                                sort = !sort;
+                              });
+                            }
+                          },
+                          child: Row(
+                            children: [
+                              Text('Status'),
+                              Icon(Icons.import_export)
+                            ],
+                          ),
+                        ),
                       ),
                       DataColumn(
                         label: Text('CreatedAt'),
@@ -146,8 +234,8 @@ class _CarScreenState extends State<CarScreen> {
                               cells: <DataCell>[
                                 DataCell(Text((index + 1).toString())),
                                 DataCell(Text(widget.car[index].id)),
-                                DataCell(Text(widget.car[index].driverid)),
-                                DataCell(Text(widget.car[index].supportid)),
+                                DataCell(Text(widget.car[index].name)),
+                                DataCell(Text(widget.car[index].numberplate)),
                                 DataCell(Text(widget.car[index].status)),
                                 DataCell(Text(
                                   widget.car[index].createdAt
@@ -164,7 +252,13 @@ class _CarScreenState extends State<CarScreen> {
                                     showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
-                                          return FormEditCar(widget.car[index]);
+                                          return FormEditCar(
+                                              widget.car[index],
+                                              widget.ticket,
+                                              widget.listuser
+                                                  .where((element) =>
+                                                      element.type == "0")
+                                                  .toList());
                                         });
                                   },
                                   icon: Icon(Icons.edit),

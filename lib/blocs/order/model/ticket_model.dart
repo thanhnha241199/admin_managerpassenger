@@ -15,9 +15,14 @@ class TicketOrder {
     this.uid,
     this.name,
     this.email,
+    this.phone,
     this.tour,
+    this.location,
     this.timetour,
     this.quantity,
+    this.status,
+    this.qr,
+    this.paymentType,
     this.seat,
     this.price,
     this.totalprice,
@@ -29,9 +34,14 @@ class TicketOrder {
   String uid;
   String name;
   String email;
+  String phone;
   String tour;
+  String location;
   String timetour;
   String quantity;
+  String status;
+  String qr;
+  String paymentType;
   String seat;
   String price;
   String totalprice;
@@ -43,9 +53,14 @@ class TicketOrder {
         uid: json["uid"],
         name: json["name"],
         email: json["email"],
+        phone: json["phone"],
         tour: json["tour"],
+        location: json["location"],
         timetour: json["timetour"],
         quantity: json["quantity"],
+        status: json["status"],
+        qr: json["qr"],
+        paymentType: json["paymentType"],
         seat: json["seat"],
         price: json["price"],
         totalprice: json["totalprice"],
@@ -58,9 +73,14 @@ class TicketOrder {
         "uid": uid,
         "name": name,
         "email": email,
+        "phone": phone,
         "tour": tour,
+        "location": location,
         "timetour": timetour,
         "quantity": quantity,
+        "status": status,
+        "qr": qr,
+        "paymentType": paymentType,
         "seat": seat,
         "price": price,
         "totalprice": totalprice,

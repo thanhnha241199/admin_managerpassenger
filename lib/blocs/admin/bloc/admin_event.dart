@@ -28,6 +28,7 @@ class UpdateUserEvent extends AdminEvent {
   final String email;
   final String password;
   final String name;
+  final String active;
   final String phone;
   final String type;
 
@@ -36,6 +37,7 @@ class UpdateUserEvent extends AdminEvent {
       @required this.email,
       @required this.password,
       @required this.name,
+      @required this.active,
       @required this.phone,
       @required this.type});
 }
@@ -46,13 +48,21 @@ class AddTicketEvent extends AdminEvent {
   final String range;
   final String price;
   final String time;
+  String carid;
+  String driverid;
+  String shutle;
+  String supporttid;
 
   AddTicketEvent(
       {@required this.locationstart,
       @required this.locationend,
       @required this.range,
       @required this.price,
-      @required this.time});
+      @required this.time,
+      this.carid,
+      this.driverid,
+      this.shutle,
+      this.supporttid});
 }
 
 class UpdateTicketEvent extends AdminEvent {
@@ -61,15 +71,25 @@ class UpdateTicketEvent extends AdminEvent {
   final String locationend;
   final String range;
   final String price;
-  final String time;
+  final String shuttle;
+  final String driverid;
 
-  UpdateTicketEvent(
-      {@required this.id,
-      @required this.locationstart,
-      @required this.locationend,
-      @required this.range,
-      @required this.price,
-      @required this.time});
+  final String supportid;
+  final String time;
+  final String carid;
+
+  UpdateTicketEvent({
+    @required this.id,
+    @required this.locationstart,
+    @required this.locationend,
+    @required this.range,
+    @required this.price,
+    @required this.shuttle,
+    @required this.driverid,
+    @required this.supportid,
+    @required this.time,
+    @required this.carid,
+  });
 }
 
 class DeleteUserEvent extends AdminEvent {
@@ -119,13 +139,19 @@ class DeleteScheduleEvent extends AdminEvent {
 }
 
 class AddCarEvent extends AdminEvent {
-  final String idtour;
+  final String tourid;
+  final String name;
+  final String numberplate;
+  final String status;
   final String driverid;
   final String supportid;
-  final String status;
+  final String description;
 
   AddCarEvent(
-      {@required this.idtour,
+      {@required this.tourid,
+      @required this.name,
+      @required this.description,
+      @required this.numberplate,
       @required this.driverid,
       @required this.supportid,
       @required this.status});
@@ -133,14 +159,20 @@ class AddCarEvent extends AdminEvent {
 
 class UpdateCarEvent extends AdminEvent {
   final String id;
-  final String idtour;
+  final String tourid;
+  final String name;
+  final String numberplate;
+  final String status;
   final String driverid;
   final String supportid;
-  final String status;
+  final String description;
 
   UpdateCarEvent(
       {@required this.id,
-      @required this.idtour,
+      @required this.tourid,
+      @required this.name,
+      @required this.description,
+      @required this.numberplate,
       @required this.driverid,
       @required this.supportid,
       @required this.status});

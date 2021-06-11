@@ -3,6 +3,7 @@ import 'package:admin_managerpassenger/blocs/ticket/model/discount.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class FormEditDiscount extends StatefulWidget {
   Discount discount;
@@ -24,7 +25,7 @@ class _FormEditDiscountState extends State<FormEditDiscount> {
   int index = 0;
   DateTime _date;
   DateTime _dateend;
-
+  final format = new DateFormat('yyyy-MM-dd hh:mm');
   void _selectDate() async {
     final DateTime newDate = await showDatePicker(
       context: context,
@@ -322,7 +323,8 @@ class _FormEditDiscountState extends State<FormEditDiscount> {
                                                         horizontal: 24.0,
                                                         vertical: 15.0,
                                                       ),
-                                                      child: Text('$_date')))),
+                                                      child: Text(
+                                                          '${format.format(_date)}')))),
                                         ],
                                       ),
                                     ),
@@ -333,7 +335,7 @@ class _FormEditDiscountState extends State<FormEditDiscount> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "Time ENd",
+                                            "Time End",
                                             style: TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 20,
@@ -366,8 +368,8 @@ class _FormEditDiscountState extends State<FormEditDiscount> {
                                                         horizontal: 24.0,
                                                         vertical: 15.0,
                                                       ),
-                                                      child:
-                                                          Text('$_dateend')))),
+                                                      child: Text(
+                                                          '${format.format(_dateend)}')))),
                                         ],
                                       ),
                                     ),

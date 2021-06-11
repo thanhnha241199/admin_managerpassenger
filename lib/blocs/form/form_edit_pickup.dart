@@ -1,14 +1,17 @@
 import 'package:admin_managerpassenger/blocs/admin/bloc/admin_bloc.dart';
 import 'package:admin_managerpassenger/blocs/car/model/car.dart';
 import 'package:admin_managerpassenger/blocs/ticket/model/pickup.dart';
+import 'package:admin_managerpassenger/blocs/ticket/model/ticket.dart';
+import 'package:admin_managerpassenger/utils/app_style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class FormEditPickup extends StatefulWidget {
   PickUp pickUp;
-
-  FormEditPickup(this.pickUp);
+  List<Ticket> ticket;
+  FormEditPickup(this.pickUp, this.ticket);
 
   @override
   _FormEditPickupState createState() => _FormEditPickupState();
@@ -19,6 +22,9 @@ class _FormEditPickupState extends State<FormEditPickup> {
   TextEditingController touridController = TextEditingController();
   TextEditingController createdController = TextEditingController();
   TextEditingController updatedController = TextEditingController();
+  TextEditingController startController = TextEditingController();
+  TextEditingController endController = TextEditingController();
+  final format = new DateFormat('yyyy-MM-dd hh:mm');
   final _formKey = GlobalKey<FormState>();
   TimeOfDay _time =
       TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
@@ -44,10 +50,20 @@ class _FormEditPickupState extends State<FormEditPickup> {
     super.initState();
     idController.text = widget.pickUp.id;
     touridController.text = widget.pickUp.tourid;
-    createdController.text = widget.pickUp.createdAt.toString();
-    updatedController.text = widget.pickUp.updatedAt.toString();
+    createdController.text = format.format(widget.pickUp.createdAt);
+    updatedController.text = format.format(widget.pickUp.updatedAt);
+    widget.ticket.forEach((e) {
+      if (e.id == widget.pickUp.tourid) {
+        setState(() {
+          selectTicket = e;
+          startController.text = selectTicket.locationstart;
+          endController.text = selectTicket.locationend;
+        });
+      }
+    });
   }
 
+  Ticket selectTicket;
   @override
   Widget build(BuildContext context) {
     List<TextEditingController> addresscontroller = List.generate(
@@ -119,7 +135,7 @@ class _FormEditPickupState extends State<FormEditPickup> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "TOur ID",
+                                "Tour ID",
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 20,
@@ -128,84 +144,209 @@ class _FormEditPickupState extends State<FormEditPickup> {
                               Container(
                                 height: MediaQuery.of(context).size.height / 20,
                                 width: MediaQuery.of(context).size.width / 2.5,
-                                margin: EdgeInsets.symmetric(vertical: 10),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 0.0),
                                 decoration: BoxDecoration(
                                     color: Colors.grey.withOpacity(0.3),
                                     borderRadius: BorderRadius.circular(12.0)),
-                                child: TextField(
-                                  controller: touridController,
-                                  decoration: InputDecoration(
-                                      hintMaxLines: 10,
-                                      border: InputBorder.none,
-                                      hintText: "Tour ID",
-                                      contentPadding: EdgeInsets.symmetric(
-                                        horizontal: 24.0,
-                                        vertical: 20.0,
-                                      )),
+                                margin: EdgeInsets.symmetric(vertical: 10),
+                                alignment: Alignment.center,
+                                child: DropdownButtonFormField<Ticket>(
+                                  hint: Text("Select item"),
+                                  value: selectTicket,
+                                  onChanged: (Ticket value) {
+                                    setState(() {
+                                      selectTicket = value;
+                                      startController.text =
+                                          selectTicket.locationstart;
+                                      endController.text =
+                                          selectTicket.locationend;
+                                    });
+                                  },
+                                  icon: Icon(Icons.keyboard_arrow_down),
+                                  decoration:
+                                      InputDecoration(border: InputBorder.none),
+                                  items: widget.ticket.map((Ticket tinh) {
+                                    return DropdownMenuItem<Ticket>(
+                                      value: tinh,
+                                      child: Text(
+                                        "${tinh.id} (${tinh.locationstart} - ${tinh.locationend}) ",
+                                        style: AppTextStyles.textSize14(),
+                                      ),
+                                    );
+                                  }).toList(),
                                 ),
                               ),
                             ],
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Row(
                             children: [
-                              Text(
-                                "CreatedAt",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 20,
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "CreatedAt",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    Container(
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              20,
+                                      width: MediaQuery.of(context).size.width /
+                                          5.5,
+                                      margin:
+                                          EdgeInsets.symmetric(vertical: 10),
+                                      decoration: BoxDecoration(
+                                          color: Colors.grey.withOpacity(0.3),
+                                          borderRadius:
+                                              BorderRadius.circular(12.0)),
+                                      child: TextField(
+                                        enabled: false,
+                                        controller: createdController,
+                                        decoration: InputDecoration(
+                                            hintMaxLines: 10,
+                                            border: InputBorder.none,
+                                            hintText: "CreatedAt",
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                              horizontal: 24.0,
+                                              vertical: 20.0,
+                                            )),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              Container(
-                                height: MediaQuery.of(context).size.height / 20,
-                                width: MediaQuery.of(context).size.width / 2.5,
-                                margin: EdgeInsets.symmetric(vertical: 10),
-                                decoration: BoxDecoration(
-                                    color: Colors.grey.withOpacity(0.3),
-                                    borderRadius: BorderRadius.circular(12.0)),
-                                child: TextField(
-                                  enabled: false,
-                                  controller: createdController,
-                                  decoration: InputDecoration(
-                                      hintMaxLines: 10,
-                                      border: InputBorder.none,
-                                      hintText: "CreatedAt",
-                                      contentPadding: EdgeInsets.symmetric(
-                                        horizontal: 24.0,
-                                        vertical: 20.0,
-                                      )),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "UpdatedAt",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    Container(
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              20,
+                                      width: MediaQuery.of(context).size.width /
+                                          5.5,
+                                      margin:
+                                          EdgeInsets.symmetric(vertical: 10),
+                                      decoration: BoxDecoration(
+                                          color: Colors.grey.withOpacity(0.3),
+                                          borderRadius:
+                                              BorderRadius.circular(12.0)),
+                                      child: TextField(
+                                        enabled: false,
+                                        controller: updatedController,
+                                        decoration: InputDecoration(
+                                            hintMaxLines: 10,
+                                            border: InputBorder.none,
+                                            hintText: "UpdatedAt",
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                              horizontal: 24.0,
+                                              vertical: 20.0,
+                                            )),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Row(
                             children: [
-                              Text(
-                                "UpdatedAt",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 20,
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Location Start",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    Container(
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              20,
+                                      width: MediaQuery.of(context).size.width /
+                                          5.5,
+                                      margin:
+                                          EdgeInsets.symmetric(vertical: 10),
+                                      decoration: BoxDecoration(
+                                          color: Colors.grey.withOpacity(0.3),
+                                          borderRadius:
+                                              BorderRadius.circular(12.0)),
+                                      child: TextField(
+                                        readOnly: true,
+                                        controller: startController,
+                                        decoration: InputDecoration(
+                                            hintMaxLines: 10,
+                                            border: InputBorder.none,
+                                            hintText: "Location Start",
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                              horizontal: 24.0,
+                                              vertical: 20.0,
+                                            )),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              Container(
-                                height: MediaQuery.of(context).size.height / 20,
-                                width: MediaQuery.of(context).size.width / 2.5,
-                                margin: EdgeInsets.symmetric(vertical: 10),
-                                decoration: BoxDecoration(
-                                    color: Colors.grey.withOpacity(0.3),
-                                    borderRadius: BorderRadius.circular(12.0)),
-                                child: TextField(
-                                  enabled: false,
-                                  controller: updatedController,
-                                  decoration: InputDecoration(
-                                      hintMaxLines: 10,
-                                      border: InputBorder.none,
-                                      hintText: "UpdatedAt",
-                                      contentPadding: EdgeInsets.symmetric(
-                                        horizontal: 24.0,
-                                        vertical: 20.0,
-                                      )),
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Location End",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    Container(
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              20,
+                                      width: MediaQuery.of(context).size.width /
+                                          5.5,
+                                      margin:
+                                          EdgeInsets.symmetric(vertical: 10),
+                                      decoration: BoxDecoration(
+                                          color: Colors.grey.withOpacity(0.3),
+                                          borderRadius:
+                                              BorderRadius.circular(12.0)),
+                                      child: TextField(
+                                        readOnly: true,
+                                        controller: endController,
+                                        decoration: InputDecoration(
+                                            hintMaxLines: 10,
+                                            border: InputBorder.none,
+                                            hintText: "Location End",
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                              horizontal: 24.0,
+                                              vertical: 20.0,
+                                            )),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
@@ -217,10 +358,6 @@ class _FormEditPickupState extends State<FormEditPickup> {
                                 children: [
                                   Text(
                                     "Time",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 20,
-                                    ),
                                   ),
                                   IconButton(
                                       onPressed: () {
@@ -248,8 +385,6 @@ class _FormEditPickupState extends State<FormEditPickup> {
                                         widget.pickUp.time.removeAt(index);
                                       });
                                     },
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 15, vertical: 15),
                                     label: Text(
                                         widget.pickUp.time[index].toString()),
                                   );
@@ -389,7 +524,7 @@ class _FormEditPickupState extends State<FormEditPickup> {
                                           address: widget.pickUp.address,
                                           id: widget.pickUp.id,
                                           time: widget.pickUp.time,
-                                          tourid: widget.pickUp.tourid));
+                                          tourid: selectTicket.id));
                                 },
                                 child: Container(
                                   height:

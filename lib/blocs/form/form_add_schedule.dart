@@ -2,11 +2,15 @@ import 'package:admin_managerpassenger/blocs/admin/bloc/admin_bloc.dart';
 import 'package:admin_managerpassenger/blocs/counter/bloc/counter_bloc.dart';
 import 'package:admin_managerpassenger/blocs/counter/bloc/counter_event.dart';
 import 'package:admin_managerpassenger/blocs/ticket/model/schedule.dart';
+import 'package:admin_managerpassenger/blocs/ticket/model/ticket.dart';
+import 'package:admin_managerpassenger/utils/app_style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FormAddSchedule extends StatefulWidget {
+  List<Ticket> ticket;
+  FormAddSchedule({this.ticket});
   @override
   _FormAddScheduleState createState() => _FormAddScheduleState();
 }
@@ -20,7 +24,7 @@ class _FormAddScheduleState extends State<FormAddSchedule> {
   TextEditingController addressController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   int number = 1;
-
+  Ticket selectTicket;
   @override
   Widget build(BuildContext context) {
     List<TextEditingController> locationcontroller =
@@ -75,23 +79,39 @@ class _FormAddScheduleState extends State<FormAddSchedule> {
                                               20,
                                       width: MediaQuery.of(context).size.width /
                                           2.5,
-                                      margin:
-                                          EdgeInsets.symmetric(vertical: 10),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 20.0, vertical: 0.0),
                                       decoration: BoxDecoration(
                                           color: Colors.grey.withOpacity(0.3),
                                           borderRadius:
                                               BorderRadius.circular(12.0)),
-                                      child: TextField(
-                                        controller: idtourController,
+                                      margin:
+                                          EdgeInsets.symmetric(vertical: 10),
+                                      alignment: Alignment.center,
+                                      child: DropdownButtonFormField<Ticket>(
+                                        hint: Text("Select item"),
+                                        value: selectTicket,
+                                        onChanged: (Ticket value) {
+                                          setState(() {
+                                            selectTicket = value;
+                                            startController.text =
+                                                selectTicket.locationstart;
+                                            endController.text =
+                                                selectTicket.locationend;
+                                          });
+                                        },
+                                        icon: Icon(Icons.keyboard_arrow_down),
                                         decoration: InputDecoration(
-                                            hintMaxLines: 10,
-                                            border: InputBorder.none,
-                                            hintText: "ID Tour",
-                                            contentPadding:
-                                                EdgeInsets.symmetric(
-                                              horizontal: 24.0,
-                                              vertical: 20.0,
-                                            )),
+                                            border: InputBorder.none),
+                                        items: widget.ticket.map((Ticket tinh) {
+                                          return DropdownMenuItem<Ticket>(
+                                            value: tinh,
+                                            child: Text(
+                                              "${tinh.id} (${tinh.locationstart} - ${tinh.locationend}) ",
+                                              style: AppTextStyles.textSize14(),
+                                            ),
+                                          );
+                                        }).toList(),
                                       ),
                                     ),
                                   ],
@@ -129,6 +149,7 @@ class _FormAddScheduleState extends State<FormAddSchedule> {
                                               borderRadius:
                                                   BorderRadius.circular(12.0)),
                                           child: TextField(
+                                            readOnly: true,
                                             controller: startController,
                                             decoration: InputDecoration(
                                                 hintMaxLines: 10,
@@ -174,6 +195,7 @@ class _FormAddScheduleState extends State<FormAddSchedule> {
                                               borderRadius:
                                                   BorderRadius.circular(12.0)),
                                           child: TextField(
+                                            readOnly: true,
                                             controller: endController,
                                             decoration: InputDecoration(
                                                 hintMaxLines: 10,
@@ -435,7 +457,7 @@ class _FormAddScheduleState extends State<FormAddSchedule> {
                                           }
                                           BlocProvider.of<AdminBloc>(context)
                                               .add(AddScheduleEvent(
-                                                  idtour: idtourController.text,
+                                                  idtour: selectTicket.id,
                                                   locationstart:
                                                       startController.text,
                                                   locationend:

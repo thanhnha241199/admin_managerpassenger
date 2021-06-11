@@ -5,13 +5,15 @@ import 'package:admin_managerpassenger/blocs/form/form_add_pickup.dart';
 import 'package:admin_managerpassenger/blocs/form/form_edit_car.dart';
 import 'package:admin_managerpassenger/blocs/form/form_edit_pickup.dart';
 import 'package:admin_managerpassenger/blocs/ticket/model/pickup.dart';
+import 'package:admin_managerpassenger/blocs/ticket/model/ticket.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class TimeScreen extends StatefulWidget {
   List<PickUp> pickup;
-
-  TimeScreen({this.pickup});
+  List<Ticket> ticket;
+  TimeScreen({this.pickup, this.ticket});
   @override
   _TimeScreenState createState() => _TimeScreenState();
 }
@@ -19,6 +21,7 @@ class TimeScreen extends StatefulWidget {
 class _TimeScreenState extends State<TimeScreen> {
   TextEditingController searchController = TextEditingController();
   bool _fromTop = true;
+  final format = new DateFormat('yyyy-MM-dd hh:mm');
   Widget build(BuildContext context) {
     return Expanded(
         flex: 5,
@@ -94,7 +97,9 @@ class _TimeScreenState extends State<TimeScreen> {
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return FormAddPickup();
+                              return FormAddPickup(
+                                ticket: widget.ticket,
+                              );
                             });
                       },
                     )
@@ -155,11 +160,11 @@ class _TimeScreenState extends State<TimeScreen> {
                                 DataCell(Text(
                                     "${widget.pickup[index].address.length} Option")),
                                 DataCell(Text(
-                                  widget.pickup[index].createdAt.toString(),
+                                  format.format(widget.pickup[index].createdAt),
                                   overflow: TextOverflow.ellipsis,
                                 )),
                                 DataCell(Text(
-                                  widget.pickup[index].updatedAt.toString(),
+                                  format.format(widget.pickup[index].updatedAt),
                                   overflow: TextOverflow.ellipsis,
                                 )),
                                 DataCell(IconButton(
@@ -168,7 +173,8 @@ class _TimeScreenState extends State<TimeScreen> {
                                         context: context,
                                         builder: (BuildContext context) {
                                           return FormEditPickup(
-                                              widget.pickup[index]);
+                                              widget.pickup[index],
+                                              widget.ticket);
                                         });
                                   },
                                   icon: Icon(Icons.edit),

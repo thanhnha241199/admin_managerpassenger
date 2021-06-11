@@ -1,13 +1,18 @@
 import 'package:admin_managerpassenger/blocs/admin/bloc/admin_bloc.dart';
+import 'package:admin_managerpassenger/blocs/admin/model/user_account.dart';
+import 'package:admin_managerpassenger/blocs/admin/model/user_authenticate.dart';
+import 'package:admin_managerpassenger/blocs/car/model/car.dart';
 import 'package:admin_managerpassenger/blocs/ticket/model/ticket.dart';
+import 'package:admin_managerpassenger/utils/app_style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FormEditTicket extends StatefulWidget {
   Ticket ticket;
-
-  FormEditTicket(this.ticket);
+  List<UserAccount> listUser;
+  List<Car> listCar;
+  FormEditTicket(this.ticket, this.listUser, this.listCar);
 
   @override
   _FormEditTicketState createState() => _FormEditTicketState();
@@ -23,14 +28,18 @@ class _FormEditTicketState extends State<FormEditTicket> {
   TextEditingController createdController = TextEditingController();
   TextEditingController updatedController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-
+  UserAccount selectedDriverUser = new UserAccount(name: "No Name");
+  UserAccount selectedSupportUser = new UserAccount(name: "No Name");
+  Car selectedCar;
+  bool shuttleCheck;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    shuttleCheck = widget.ticket.shuttle == "true" ? true : false;
     idController.text = widget.ticket.id;
-    startController.text = widget.ticket.locationstart;
-    endController.text = widget.ticket.locationend;
+    selectEnd = widget.ticket.locationend;
+    selectStart = widget.ticket.locationstart;
     timeController.text = widget.ticket.time;
     rangeController.text = widget.ticket.range;
     priceController.text = widget.ticket.price;
@@ -38,8 +47,97 @@ class _FormEditTicketState extends State<FormEditTicket> {
     updatedController.text = widget.ticket.updatedAt.toString();
   }
 
+  List<String> tinh = [
+    "An Giang",
+    "Bà Rịa – Vũng Tàu",
+    "Bắc Giang",
+    "Kon Tum",
+    "Lai Châu",
+    "Bắc Giang",
+    "Lâm Đồng",
+    "Bắc Kạn",
+    "Lạng Sơn",
+    "Bạc Liêu",
+    "Lào Cai",
+    "Bắc Ninh",
+    "Long An",
+    "Bến Tre",
+    "Nam Định",
+    "Bình Định",
+    "Nghệ An",
+    "Bình Dương",
+    "Ninh Bình",
+    "Bình Phước",
+    "Ninh Thuận",
+    "Bình Thuận",
+    "Phú Thọ",
+    "Cà Mau",
+    "Phú Yên",
+    "Cần Thơ",
+    "Quảng Bình",
+    "Cao Bằng",
+    "Quảng Nam",
+    "Đà Nẵng",
+    "Quảng Ngãi",
+    "Đắk Lắk",
+    "Quảng Ninh",
+    "Đắk Nông",
+    "Quảng Trị",
+    "Điện Biên",
+    "Sóc Trăng",
+    "Đồng Nai",
+    "Sơn La",
+    "Đồng Tháp",
+    "Tây Ninh",
+    "Gia Lai",
+    "Thái Bình",
+    "Hà Giang",
+    "Thái Nguyên",
+    "Hà Nam",
+    "Thanh Hóa",
+    "Hà Nội",
+    "Thừa Thiên Huế",
+    "Hà Tĩnh",
+    "Tiền Giang",
+    "Hải Dương",
+    "TP. Hồ Chí Minh",
+    "Hải Phòng",
+    "Trà Vinh",
+    "Hậu Giang",
+    "Tuyên Quang",
+    "Hòa Bình",
+    "Vĩnh Long",
+    "Hưng Yên",
+    "Vĩnh Phúc",
+    "Khánh Hòa",
+    "Yên Bái"
+  ];
+  String selectStart, selectEnd;
   @override
   Widget build(BuildContext context) {
+    widget.listUser.forEach((e) {
+      if (e.id == widget.ticket.driverid) {
+        setState(() {
+          selectedDriverUser = e;
+          print(e);
+        });
+      }
+      if (e.id == widget.ticket.supportid) {
+        setState(() {
+          selectedSupportUser = e;
+          print(e);
+        });
+      }
+    });
+    widget.listCar.forEach((e) {
+      if (e.id == widget.ticket.carid) {
+        setState(() {
+          selectedCar = e;
+          print(e);
+        });
+      }
+    });
+
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
       title: Center(
@@ -101,96 +199,219 @@ class _FormEditTicketState extends State<FormEditTicket> {
                               ),
                             ],
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          ListTile(
+                            title: Text(
+                              'Shuttle',
+                            ),
+                            leading: Switch(
+                              value: shuttleCheck,
+                              activeColor: Color(0xFF6200EE),
+                              onChanged: (bool value) {
+                                setState(() {
+                                  shuttleCheck = value;
+                                });
+                              },
+                            ),
+                          ),
+                          Row(
                             children: [
-                              Text(
-                                "Location Start",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 20,
-                                ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Location Start",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  Container(
+                                    height:
+                                        MediaQuery.of(context).size.height / 20,
+                                    width:
+                                        MediaQuery.of(context).size.width / 5.5,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 20.0, vertical: 0.0),
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey.withOpacity(0.3),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0)),
+                                    margin: EdgeInsets.symmetric(vertical: 10),
+                                    alignment: Alignment.center,
+                                    child: DropdownButtonFormField<String>(
+                                      hint: Text("Select item"),
+                                      value: selectStart,
+                                      onChanged: (String value) {
+                                        setState(() {
+                                          selectStart = value;
+                                        });
+                                      },
+                                      icon: Icon(Icons.keyboard_arrow_down),
+                                      decoration: InputDecoration(
+                                          border: InputBorder.none),
+                                      items: tinh.map((String tinh) {
+                                        return DropdownMenuItem<String>(
+                                          value: tinh,
+                                          child: Text(
+                                            tinh,
+                                            style: AppTextStyles.textSize14(),
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              Container(
-                                height: MediaQuery.of(context).size.height / 20,
-                                width: MediaQuery.of(context).size.width / 2.5,
-                                margin: EdgeInsets.symmetric(vertical: 10),
-                                decoration: BoxDecoration(
-                                    color: Colors.grey.withOpacity(0.3),
-                                    borderRadius: BorderRadius.circular(12.0)),
-                                child: TextField(
-                                  controller: startController,
-                                  decoration: InputDecoration(
-                                      hintMaxLines: 10,
-                                      border: InputBorder.none,
-                                      hintText: "Location Start",
-                                      contentPadding: EdgeInsets.symmetric(
-                                        horizontal: 24.0,
-                                        vertical: 20.0,
-                                      )),
-                                ),
+                              SizedBox(
+                                width: 40.0,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Location End",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  Container(
+                                    height:
+                                        MediaQuery.of(context).size.height / 20,
+                                    width:
+                                        MediaQuery.of(context).size.width / 5.5,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 20.0, vertical: 0.0),
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey.withOpacity(0.3),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0)),
+                                    margin: EdgeInsets.symmetric(vertical: 10),
+                                    alignment: Alignment.center,
+                                    child: DropdownButtonFormField<String>(
+                                      hint: Text("Select item"),
+                                      value: selectEnd,
+                                      onChanged: (String value) {
+                                        setState(() {
+                                          selectEnd = value;
+                                        });
+                                      },
+                                      icon: Icon(Icons.keyboard_arrow_down),
+                                      decoration: InputDecoration(
+                                          border: InputBorder.none),
+                                      items: tinh.map((String tinh) {
+                                        return DropdownMenuItem<String>(
+                                          value: tinh,
+                                          child: Text(
+                                            tinh,
+                                            style: AppTextStyles.textSize14(),
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Row(
                             children: [
-                              Text(
-                                "Location End",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 20,
-                                ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Time",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  Container(
+                                    height:
+                                        MediaQuery.of(context).size.height / 20,
+                                    width:
+                                        MediaQuery.of(context).size.width / 5.5,
+                                    margin: EdgeInsets.symmetric(vertical: 10),
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey.withOpacity(0.3),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0)),
+                                    child: TextField(
+                                      controller: timeController,
+                                      decoration: InputDecoration(
+                                          hintMaxLines: 10,
+                                          border: InputBorder.none,
+                                          hintText: "Time",
+                                          contentPadding: EdgeInsets.symmetric(
+                                            horizontal: 24.0,
+                                            vertical: 20.0,
+                                          )),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              Container(
-                                height: MediaQuery.of(context).size.height / 20,
-                                width: MediaQuery.of(context).size.width / 2.5,
-                                margin: EdgeInsets.symmetric(vertical: 10),
-                                decoration: BoxDecoration(
-                                    color: Colors.grey.withOpacity(0.3),
-                                    borderRadius: BorderRadius.circular(12.0)),
-                                child: TextField(
-                                  controller: endController,
-                                  decoration: InputDecoration(
-                                      hintMaxLines: 10,
-                                      border: InputBorder.none,
-                                      hintText: "Location End",
-                                      contentPadding: EdgeInsets.symmetric(
-                                        horizontal: 24.0,
-                                        vertical: 20.0,
-                                      )),
-                                ),
+                              SizedBox(
+                                width: 40.0,
                               ),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Time",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 20,
-                                ),
-                              ),
-                              Container(
-                                height: MediaQuery.of(context).size.height / 20,
-                                width: MediaQuery.of(context).size.width / 2.5,
-                                margin: EdgeInsets.symmetric(vertical: 10),
-                                decoration: BoxDecoration(
-                                    color: Colors.grey.withOpacity(0.3),
-                                    borderRadius: BorderRadius.circular(12.0)),
-                                child: TextField(
-                                  controller: timeController,
-                                  decoration: InputDecoration(
-                                      hintMaxLines: 10,
-                                      border: InputBorder.none,
-                                      hintText: "Time",
-                                      contentPadding: EdgeInsets.symmetric(
-                                        horizontal: 24.0,
-                                        vertical: 20.0,
-                                      )),
-                                ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "CarID",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  Container(
+                                    height:
+                                        MediaQuery.of(context).size.height / 20,
+                                    width:
+                                        MediaQuery.of(context).size.width / 5.5,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 20.0, vertical: 0.0),
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey.withOpacity(0.3),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0)),
+                                    margin: EdgeInsets.symmetric(vertical: 10),
+                                    alignment: Alignment.center,
+                                    child: DropdownButtonFormField<Car>(
+                                      hint: Text("Select item"),
+                                      value: selectedCar,
+                                      onChanged: (Car value) {
+                                        setState(() {
+                                          selectedCar = value;
+                                          print(selectedCar.toJson());
+                                          widget.listUser.forEach((e) {
+                                            if (e.id == selectedCar.driverid) {
+                                              selectedDriverUser = e;
+                                              print(selectedDriverUser.name);
+                                            }
+                                            if (e.id == selectedCar.supportid) {
+                                              selectedSupportUser = e;
+                                              print(selectedSupportUser.name);
+                                            }
+                                          });
+                                        });
+                                      },
+                                      icon: Icon(Icons.keyboard_arrow_down),
+                                      decoration: InputDecoration(
+                                          border: InputBorder.none),
+                                      items: widget.listCar.map((Car car) {
+                                        return DropdownMenuItem<Car>(
+                                          value: car,
+                                          child: Text(
+                                            car.id,
+                                            style: AppTextStyles.textSize14(),
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -207,12 +428,15 @@ class _FormEditTicketState extends State<FormEditTicket> {
                                     ),
                                   ),
                                   Container(
-                                    height: MediaQuery.of(context).size.height / 20,
-                                    width: MediaQuery.of(context).size.width / 5.5,
+                                    height:
+                                        MediaQuery.of(context).size.height / 20,
+                                    width:
+                                        MediaQuery.of(context).size.width / 5.5,
                                     margin: EdgeInsets.symmetric(vertical: 10),
                                     decoration: BoxDecoration(
                                         color: Colors.grey.withOpacity(0.3),
-                                        borderRadius: BorderRadius.circular(12.0)),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0)),
                                     child: TextField(
                                       controller: rangeController,
                                       decoration: InputDecoration(
@@ -227,7 +451,9 @@ class _FormEditTicketState extends State<FormEditTicket> {
                                   ),
                                 ],
                               ),
-                              SizedBox(width: 40,),
+                              SizedBox(
+                                width: 40,
+                              ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -239,12 +465,14 @@ class _FormEditTicketState extends State<FormEditTicket> {
                                     ),
                                   ),
                                   Container(
-                                    height: MediaQuery.of(context).size.height / 20,
-                                    width: MediaQuery.of(context).size.width / 5.5,
-                                    margin: EdgeInsets.symmetric(vertical: 10),
+                                    height:
+                                        MediaQuery.of(context).size.height / 20,
+                                    width:
+                                        MediaQuery.of(context).size.width / 5.5,
                                     decoration: BoxDecoration(
                                         color: Colors.grey.withOpacity(0.3),
-                                        borderRadius: BorderRadius.circular(12.0)),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0)),
                                     child: TextField(
                                       controller: priceController,
                                       decoration: InputDecoration(
@@ -255,6 +483,76 @@ class _FormEditTicketState extends State<FormEditTicket> {
                                             horizontal: 24.0,
                                             vertical: 20.0,
                                           )),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Column(
+                                children: [
+                                  Text(
+                                    "DriverID",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  Container(
+                                      alignment: Alignment.center,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 20.0, vertical: 0.0),
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              20,
+                                      width: MediaQuery.of(context).size.width /
+                                          5.5,
+                                      margin:
+                                          EdgeInsets.symmetric(vertical: 10),
+                                      decoration: BoxDecoration(
+                                          color: Colors.grey.withOpacity(0.3),
+                                          borderRadius:
+                                              BorderRadius.circular(12.0)),
+                                      child: Text(
+                                        selectedDriverUser.name,
+                                        style: AppTextStyles.textSize14(),
+                                      )),
+                                ],
+                              ),
+                              SizedBox(
+                                width: 40,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "SupportID",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  Container(
+                                    height:
+                                        MediaQuery.of(context).size.height / 20,
+                                    width:
+                                        MediaQuery.of(context).size.width / 5.5,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 20.0, vertical: 0.0),
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey.withOpacity(0.3),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0)),
+                                    margin: EdgeInsets.symmetric(vertical: 10),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      selectedSupportUser.name,
+                                      style: AppTextStyles.textSize14(),
                                     ),
                                   ),
                                 ],
@@ -345,15 +643,19 @@ class _FormEditTicketState extends State<FormEditTicket> {
                                     )
                                   : GestureDetector(
                                       onTap: () {
-                                        BlocProvider.of<AdminBloc>(context).add(
-                                            UpdateTicketEvent(
-                                                id: idController.text,
-                                                locationstart:
-                                                    startController.text,
-                                                locationend: endController.text,
-                                                range: rangeController.text,
-                                                price: priceController.text,
-                                                time: timeController.text));
+                                        BlocProvider.of<AdminBloc>(context)
+                                            .add(UpdateTicketEvent(
+                                          id: widget.ticket.id,
+                                          locationstart: selectStart,
+                                          locationend: selectEnd,
+                                          range: rangeController.text,
+                                          price: priceController.text,
+                                          time: timeController.text,
+                                          driverid: selectedDriverUser.id,
+                                          carid: selectedCar.id,
+                                          supportid: selectedSupportUser.id,
+                                          shuttle: shuttleCheck.toString(),
+                                        ));
                                       },
                                       child: Container(
                                         height:

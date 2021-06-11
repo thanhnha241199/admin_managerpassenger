@@ -19,6 +19,7 @@ class _FormAddEmployeeState extends State<FormAddEmployee> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    typeController.text = "0";
   }
 
   @override
@@ -27,9 +28,9 @@ class _FormAddEmployeeState extends State<FormAddEmployee> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
       title: Center(
           child: Text(
-            "Add Employee",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-          )),
+        "Add Employee",
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+      )),
       content: BlocListener<AdminBloc, AdminState>(
         listener: (context, state) {
           if (state is SuccessState) {
@@ -65,14 +66,14 @@ class _FormAddEmployeeState extends State<FormAddEmployee> {
                                 ),
                                 Container(
                                   height:
-                                  MediaQuery.of(context).size.height / 20,
+                                      MediaQuery.of(context).size.height / 20,
                                   width:
-                                  MediaQuery.of(context).size.width / 2.5,
+                                      MediaQuery.of(context).size.width / 2.5,
                                   margin: EdgeInsets.symmetric(vertical: 10),
                                   decoration: BoxDecoration(
                                       color: Colors.grey.withOpacity(0.3),
                                       borderRadius:
-                                      BorderRadius.circular(12.0)),
+                                          BorderRadius.circular(12.0)),
                                   child: TextField(
                                     controller: emailController,
                                     decoration: InputDecoration(
@@ -102,14 +103,14 @@ class _FormAddEmployeeState extends State<FormAddEmployee> {
                                 ),
                                 Container(
                                   height:
-                                  MediaQuery.of(context).size.height / 20,
+                                      MediaQuery.of(context).size.height / 20,
                                   width:
-                                  MediaQuery.of(context).size.width / 2.5,
+                                      MediaQuery.of(context).size.width / 2.5,
                                   margin: EdgeInsets.symmetric(vertical: 10),
                                   decoration: BoxDecoration(
                                       color: Colors.grey.withOpacity(0.3),
                                       borderRadius:
-                                      BorderRadius.circular(12.0)),
+                                          BorderRadius.circular(12.0)),
                                   child: TextField(
                                     obscureText: true,
                                     controller: passwordController,
@@ -142,16 +143,16 @@ class _FormAddEmployeeState extends State<FormAddEmployee> {
                                     ),
                                     Container(
                                       height:
-                                      MediaQuery.of(context).size.height /
-                                          20,
+                                          MediaQuery.of(context).size.height /
+                                              20,
                                       width: MediaQuery.of(context).size.width /
                                           5.5,
                                       margin:
-                                      EdgeInsets.symmetric(vertical: 10),
+                                          EdgeInsets.symmetric(vertical: 10),
                                       decoration: BoxDecoration(
                                           color: Colors.grey.withOpacity(0.3),
                                           borderRadius:
-                                          BorderRadius.circular(12.0)),
+                                              BorderRadius.circular(12.0)),
                                       child: TextField(
                                         controller: nameController,
                                         decoration: InputDecoration(
@@ -159,7 +160,7 @@ class _FormAddEmployeeState extends State<FormAddEmployee> {
                                             border: InputBorder.none,
                                             hintText: "Name",
                                             contentPadding:
-                                            EdgeInsets.symmetric(
+                                                EdgeInsets.symmetric(
                                               horizontal: 24.0,
                                               vertical: 20.0,
                                             )),
@@ -182,16 +183,16 @@ class _FormAddEmployeeState extends State<FormAddEmployee> {
                                     ),
                                     Container(
                                       height:
-                                      MediaQuery.of(context).size.height /
-                                          20,
+                                          MediaQuery.of(context).size.height /
+                                              20,
                                       width: MediaQuery.of(context).size.width /
                                           5.5,
                                       margin:
-                                      EdgeInsets.symmetric(vertical: 10),
+                                          EdgeInsets.symmetric(vertical: 10),
                                       decoration: BoxDecoration(
                                           color: Colors.grey.withOpacity(0.3),
                                           borderRadius:
-                                          BorderRadius.circular(12.0)),
+                                              BorderRadius.circular(12.0)),
                                       child: TextField(
                                         controller: phoneController,
                                         decoration: InputDecoration(
@@ -199,7 +200,7 @@ class _FormAddEmployeeState extends State<FormAddEmployee> {
                                             border: InputBorder.none,
                                             hintText: "Phone",
                                             contentPadding:
-                                            EdgeInsets.symmetric(
+                                                EdgeInsets.symmetric(
                                               horizontal: 24.0,
                                               vertical: 20.0,
                                             )),
@@ -224,14 +225,14 @@ class _FormAddEmployeeState extends State<FormAddEmployee> {
                                 ),
                                 Container(
                                   height:
-                                  MediaQuery.of(context).size.height / 20,
+                                      MediaQuery.of(context).size.height / 20,
                                   width:
-                                  MediaQuery.of(context).size.width / 2.5,
+                                      MediaQuery.of(context).size.width / 2.5,
                                   margin: EdgeInsets.symmetric(vertical: 10),
                                   decoration: BoxDecoration(
                                       color: Colors.grey.withOpacity(0.3),
                                       borderRadius:
-                                      BorderRadius.circular(12.0)),
+                                          BorderRadius.circular(12.0)),
                                   child: TextField(
                                     controller: typeController,
                                     decoration: InputDecoration(
@@ -256,42 +257,42 @@ class _FormAddEmployeeState extends State<FormAddEmployee> {
                             children: [
                               state is AddLoadingState
                                   ? Container(
-                                height:
-                                MediaQuery.of(context).size.height /
-                                    22,
-                                width: MediaQuery.of(context).size.width /
-                                    28,
-                                child: Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              )
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              22,
+                                      width: MediaQuery.of(context).size.width /
+                                          28,
+                                      child: Center(
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    )
                                   : GestureDetector(
-                                onTap: () {
-                                  BlocProvider.of<AdminBloc>(context).add(
-                                      AddUserEvent(
-                                          email: emailController.text,
-                                          password:
-                                          passwordController.text,
-                                          name: nameController.text,
-                                          phone: phoneController.text,
-                                          type: typeController.text));
-                                },
-                                child: Container(
-                                  height:
-                                  MediaQuery.of(context).size.height /
-                                      22,
-                                  width:
-                                  MediaQuery.of(context).size.width /
-                                      28,
-                                  decoration: BoxDecoration(
-                                      color: Colors.blueAccent,
-                                      borderRadius:
-                                      BorderRadius.circular(12)),
-                                  child: Center(
-                                    child: Text("Save"),
-                                  ),
-                                ),
-                              ),
+                                      onTap: () {
+                                        BlocProvider.of<AdminBloc>(context).add(
+                                            AddUserEvent(
+                                                email: emailController.text,
+                                                password:
+                                                    passwordController.text,
+                                                name: nameController.text,
+                                                phone: phoneController.text,
+                                                type: typeController.text));
+                                      },
+                                      child: Container(
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                                22,
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                28,
+                                        decoration: BoxDecoration(
+                                            color: Colors.blueAccent,
+                                            borderRadius:
+                                                BorderRadius.circular(12)),
+                                        child: Center(
+                                          child: Text("Save"),
+                                        ),
+                                      ),
+                                    ),
                               SizedBox(
                                 width: 50,
                               ),
@@ -301,7 +302,7 @@ class _FormAddEmployeeState extends State<FormAddEmployee> {
                                 },
                                 child: Container(
                                   height:
-                                  MediaQuery.of(context).size.height / 22,
+                                      MediaQuery.of(context).size.height / 22,
                                   width: MediaQuery.of(context).size.width / 28,
                                   decoration: BoxDecoration(
                                       color: Colors.blueAccent,

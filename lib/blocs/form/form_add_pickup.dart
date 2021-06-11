@@ -1,11 +1,15 @@
 import 'package:admin_managerpassenger/blocs/admin/bloc/admin_bloc.dart';
 import 'package:admin_managerpassenger/blocs/car/model/car.dart';
 import 'package:admin_managerpassenger/blocs/ticket/model/pickup.dart';
+import 'package:admin_managerpassenger/blocs/ticket/model/ticket.dart';
+import 'package:admin_managerpassenger/utils/app_style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FormAddPickup extends StatefulWidget {
+  List<Ticket> ticket;
+  FormAddPickup({this.ticket});
   @override
   _FormAddPickupState createState() => _FormAddPickupState();
 }
@@ -16,6 +20,7 @@ class _FormAddPickupState extends State<FormAddPickup> {
   List<String> list_time = new List();
   int number_time = 0;
   int number_address = 0;
+  Ticket selectTicket;
   TimeOfDay _time =
       TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
 
@@ -79,7 +84,7 @@ class _FormAddPickupState extends State<FormAddPickup> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "TOur ID",
+                                "ID Tour",
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 20,
@@ -88,20 +93,33 @@ class _FormAddPickupState extends State<FormAddPickup> {
                               Container(
                                 height: MediaQuery.of(context).size.height / 20,
                                 width: MediaQuery.of(context).size.width / 2.5,
-                                margin: EdgeInsets.symmetric(vertical: 10),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 0.0),
                                 decoration: BoxDecoration(
                                     color: Colors.grey.withOpacity(0.3),
                                     borderRadius: BorderRadius.circular(12.0)),
-                                child: TextField(
-                                  controller: touridController,
-                                  decoration: InputDecoration(
-                                      hintMaxLines: 10,
-                                      border: InputBorder.none,
-                                      hintText: "Tour ID",
-                                      contentPadding: EdgeInsets.symmetric(
-                                        horizontal: 24.0,
-                                        vertical: 20.0,
-                                      )),
+                                margin: EdgeInsets.symmetric(vertical: 10),
+                                alignment: Alignment.center,
+                                child: DropdownButtonFormField<Ticket>(
+                                  hint: Text("Select item"),
+                                  value: selectTicket,
+                                  onChanged: (Ticket value) {
+                                    setState(() {
+                                      selectTicket = value;
+                                    });
+                                  },
+                                  icon: Icon(Icons.keyboard_arrow_down),
+                                  decoration:
+                                      InputDecoration(border: InputBorder.none),
+                                  items: widget.ticket.map((Ticket tinh) {
+                                    return DropdownMenuItem<Ticket>(
+                                      value: tinh,
+                                      child: Text(
+                                        "${tinh.id} (${tinh.locationstart} - ${tinh.locationend}) ",
+                                        style: AppTextStyles.textSize14(),
+                                      ),
+                                    );
+                                  }).toList(),
                                 ),
                               ),
                             ],
@@ -300,7 +318,7 @@ class _FormAddPickupState extends State<FormAddPickup> {
                                       AddPickUpEvent(
                                           address: address,
                                           time: list_time,
-                                          tourid: touridController.text));
+                                          tourid: selectTicket.id));
                                 },
                                 child: Container(
                                   height:

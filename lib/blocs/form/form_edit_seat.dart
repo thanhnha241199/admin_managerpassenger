@@ -1,12 +1,16 @@
 import 'package:admin_managerpassenger/blocs/admin/bloc/admin_bloc.dart';
+import 'package:admin_managerpassenger/blocs/car/model/car.dart';
 import 'package:admin_managerpassenger/blocs/ticket/model/seat.dart';
+import 'package:admin_managerpassenger/blocs/ticket/model/ticket.dart';
+import 'package:admin_managerpassenger/utils/app_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FormEditSeat extends StatefulWidget {
   Seat seat;
-
-  FormEditSeat(this.seat);
+  List<Car> listCar;
+  List<Ticket> ticket;
+  FormEditSeat(this.seat, this.listCar, this.ticket);
   @override
   _FormEditSeatState createState() => _FormEditSeatState();
 }
@@ -14,8 +18,13 @@ class FormEditSeat extends StatefulWidget {
 class _FormEditSeatState extends State<FormEditSeat> {
   TextEditingController idController = TextEditingController();
   TextEditingController idtourController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
   TextEditingController idcarController = TextEditingController();
+  TextEditingController locationStartController = TextEditingController();
+  TextEditingController locationEndController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  Car car;
+  Ticket selectTicket;
   @override
   void initState() {
     // TODO: implement initState
@@ -23,6 +32,22 @@ class _FormEditSeatState extends State<FormEditSeat> {
     idtourController.text = widget.seat.idtour;
     idController.text = widget.seat.id;
     idcarController.text = widget.seat.idcar;
+    widget.ticket.forEach((e) {
+      if (widget.seat.idtour == e.id) {
+        setState(() {
+          locationStartController.text = e.locationstart;
+          locationEndController.text = e.locationend;
+        });
+      }
+    });
+    widget.listCar.forEach((e) {
+      if (e.id == widget.seat.idcar) {
+        setState(() {
+          car = e;
+          nameController.text = car.name;
+        });
+      }
+    });
   }
 
   @override
@@ -43,9 +68,10 @@ class _FormEditSeatState extends State<FormEditSeat> {
         child: BlocBuilder<AdminBloc, AdminState>(
           builder: (context, state) {
             return Container(
-              height: MediaQuery.of(context).size.height / 1.8,
+              height: MediaQuery.of(context).size.height / 1.4,
               width: MediaQuery.of(context).size.width / 2.5,
-              child: Stack(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -82,6 +108,7 @@ class _FormEditSeatState extends State<FormEditSeat> {
                                           borderRadius:
                                               BorderRadius.circular(12.0)),
                                       child: TextField(
+                                        readOnly: true,
                                         controller: idController,
                                         decoration: InputDecoration(
                                             hintMaxLines: 10,
@@ -122,6 +149,7 @@ class _FormEditSeatState extends State<FormEditSeat> {
                                           borderRadius:
                                               BorderRadius.circular(12.0)),
                                       child: TextField(
+                                        readOnly: true,
                                         controller: idtourController,
                                         decoration: InputDecoration(
                                             hintMaxLines: 10,
@@ -135,6 +163,123 @@ class _FormEditSeatState extends State<FormEditSeat> {
                                       ),
                                     ),
                                   ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Location Start",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    Container(
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              20,
+                                      width: MediaQuery.of(context).size.width /
+                                          5.5,
+                                      margin:
+                                          EdgeInsets.symmetric(vertical: 10),
+                                      decoration: BoxDecoration(
+                                          color: Colors.grey.withOpacity(0.3),
+                                          borderRadius:
+                                              BorderRadius.circular(12.0)),
+                                      child: TextField(
+                                        readOnly: true,
+                                        controller: locationStartController,
+                                        decoration: InputDecoration(
+                                            hintMaxLines: 10,
+                                            border: InputBorder.none,
+                                            hintText: "Location Start",
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                              horizontal: 24.0,
+                                              vertical: 20.0,
+                                            )),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Location End",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    Container(
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              20,
+                                      width: MediaQuery.of(context).size.width /
+                                          5.5,
+                                      margin:
+                                          EdgeInsets.symmetric(vertical: 10),
+                                      decoration: BoxDecoration(
+                                          color: Colors.grey.withOpacity(0.3),
+                                          borderRadius:
+                                              BorderRadius.circular(12.0)),
+                                      child: TextField(
+                                        readOnly: true,
+                                        controller: locationEndController,
+                                        decoration: InputDecoration(
+                                            hintMaxLines: 10,
+                                            border: InputBorder.none,
+                                            hintText: "Location End",
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                              horizontal: 24.0,
+                                              vertical: 20.0,
+                                            )),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Name",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 20,
+                                ),
+                              ),
+                              Container(
+                                height: MediaQuery.of(context).size.height / 20,
+                                width: MediaQuery.of(context).size.width / 2.5,
+                                margin: EdgeInsets.symmetric(vertical: 10),
+                                decoration: BoxDecoration(
+                                    color: Colors.grey.withOpacity(0.3),
+                                    borderRadius: BorderRadius.circular(12.0)),
+                                child: TextField(
+                                  controller: nameController,
+                                  decoration: InputDecoration(
+                                      hintMaxLines: 10,
+                                      border: InputBorder.none,
+                                      hintText: "Name",
+                                      contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 24.0,
+                                        vertical: 20.0,
+                                      )),
                                 ),
                               ),
                             ],
@@ -156,21 +301,46 @@ class _FormEditSeatState extends State<FormEditSeat> {
                                       MediaQuery.of(context).size.height / 20,
                                   width:
                                       MediaQuery.of(context).size.width / 2.5,
-                                  margin: EdgeInsets.symmetric(vertical: 10),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 0.0),
                                   decoration: BoxDecoration(
                                       color: Colors.grey.withOpacity(0.3),
                                       borderRadius:
                                           BorderRadius.circular(12.0)),
-                                  child: TextField(
-                                    controller: idcarController,
+                                  margin: EdgeInsets.symmetric(vertical: 10),
+                                  alignment: Alignment.center,
+                                  child: DropdownButtonFormField<Car>(
+                                    hint: Text("Select item"),
+                                    value: car,
+                                    onChanged: (Car value) {
+                                      setState(() {
+                                        car = value;
+                                        idtourController.text = car.tourid;
+                                        nameController.text = car.name;
+                                        widget.ticket.forEach((e) {
+                                          if (car.tourid == e.id) {
+                                            setState(() {
+                                              locationStartController.text =
+                                                  e.locationstart;
+                                              locationEndController.text =
+                                                  e.locationend;
+                                            });
+                                          }
+                                        });
+                                      });
+                                    },
+                                    icon: Icon(Icons.keyboard_arrow_down),
                                     decoration: InputDecoration(
-                                        hintMaxLines: 10,
-                                        border: InputBorder.none,
-                                        hintText: "Car ID",
-                                        contentPadding: EdgeInsets.symmetric(
-                                          horizontal: 24.0,
-                                          vertical: 20.0,
-                                        )),
+                                        border: InputBorder.none),
+                                    items: widget.listCar.map((Car tinh) {
+                                      return DropdownMenuItem<Car>(
+                                        value: tinh,
+                                        child: Text(
+                                          "${tinh.id}",
+                                          style: AppTextStyles.textSize14(),
+                                        ),
+                                      );
+                                    }).toList(),
                                   ),
                                 ),
                               ],
@@ -181,7 +351,6 @@ class _FormEditSeatState extends State<FormEditSeat> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.only(top: 270, left: 18.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -197,7 +366,6 @@ class _FormEditSeatState extends State<FormEditSeat> {
                   ),
                   Container(
                     height: 50,
-                    margin: EdgeInsets.only(top: 300),
                     child: ListView.builder(
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
@@ -229,7 +397,6 @@ class _FormEditSeatState extends State<FormEditSeat> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.only(top: 350, left: 18.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -245,7 +412,6 @@ class _FormEditSeatState extends State<FormEditSeat> {
                   ),
                   Container(
                     height: 50,
-                    margin: EdgeInsets.only(top: 380),
                     child: ListView.builder(
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
@@ -277,7 +443,7 @@ class _FormEditSeatState extends State<FormEditSeat> {
                     ),
                   ),
                   Container(
-                      margin: EdgeInsets.only(top: 500),
+                      height: 80,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -298,7 +464,7 @@ class _FormEditSeatState extends State<FormEditSeat> {
                                             floors1: widget.seat.floors1,
                                             tourid: widget.seat.idtour,
                                             id: widget.seat.id,
-                                            carid: widget.seat.idcar,
+                                            carid: car.id,
                                             floors2: widget.seat.floors2));
                                   },
                                   child: Container(
